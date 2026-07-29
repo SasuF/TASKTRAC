@@ -1,0 +1,792 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+/* ---------------- General/Intern-Roster things ---------------- */
+
+body{
+
+    background:#1e2320;
+    color:white;
+    font-family:Segoe UI, sans-serif;
+
+}
+
+.container{
+
+    width:90%;
+    max-width:1400px;
+    margin:50px auto;
+
+}
+
+h1{
+
+    margin-bottom:40px;
+    letter-spacing:2px;
+
+}
+
+.intern-grid{
+
+    display:grid;
+
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+
+    gap:25px;
+
+}
+
+.intern-card{
+
+    background:#2a302d;
+
+    border:2px solid transparent;
+
+    border-radius:10px;
+
+    padding:24px;
+
+    text-decoration:none;
+
+    color:white;
+
+    transition:.25s;
+
+}
+
+.intern-card:hover{
+
+    border-color:#c69742;
+
+    transform:translateY(-4px);
+
+}
+
+.card-top{
+
+    display:flex;
+
+    gap:18px;
+
+    align-items:center;
+
+}
+
+.avatar{
+
+    width:64px;
+
+    height:64px;
+
+    border-radius:8px;
+
+    background:#cb7758;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    color:#222;
+
+    overflow:hidden;
+
+}
+
+.avatar img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+}
+
+.info h2{
+
+    margin-bottom:5px;
+
+    font-size:1.3rem;
+
+}
+
+.info p{
+
+    color:#bfbfbf;
+
+}
+
+.status{
+
+    margin:28px 0;
+
+    color:#87d37c;
+
+    font-weight:bold;
+
+}
+
+.buttons{
+
+    display:flex;
+
+    gap:15px;
+
+}
+
+.buttons button{
+
+    flex:1;
+
+    padding:12px;
+
+    background:transparent;
+
+    color:white;
+
+    border:1px solid #666;
+
+    border-radius:6px;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.buttons button:hover{
+
+    background:#c69742;
+
+    border-color:#c69742;
+
+    color:#1e2320;
+
+}
+
+.toolbar{
+    display:flex;
+    justify-content:flex-end;
+    margin-bottom:30px;
+}
+
+#search{
+
+    width:320px;
+    padding:12px 18px;
+
+    background:#2a302d;
+    color:white;
+
+    border:2px solid #444;
+    border-radius:8px;
+
+    outline:none;
+
+    transition:.25s;
+}
+
+#search:focus{
+
+    border-color:#c69742;
+    box-shadow:0 0 12px rgba(198,151,66,.3);
+
+}
+
+.avatar{
+
+    background:linear-gradient(
+        135deg,
+        #d68a61,
+        #b66a46
+    );
+
+    transition:.25s;
+
+}
+
+.intern-card:hover .avatar{
+
+    transform:rotate(-3deg) scale(1.08);
+
+}
+
+/* ---------------- Login Page Stuff ---------------- */
+
+.login-container{
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:#1e2320;
+
+}
+
+.login-card{
+
+    width:400px;
+
+    background:#2a302d;
+
+    padding:45px;
+
+    border-radius:12px;
+
+    border:2px solid transparent;
+
+    transition:.3s;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.35);
+
+}
+
+.login-card:hover{
+
+    border-color:#c69742;
+
+    box-shadow:
+        0 20px 45px rgba(0,0,0,.4),
+        0 0 18px rgba(198,151,66,.2);
+
+}
+
+.login-card h1{
+
+    text-align:center;
+
+    letter-spacing:2px;
+
+    margin-bottom:10px;
+
+}
+
+.subtitle{
+
+    text-align:center;
+
+    color:#bfbfbf;
+
+    margin-bottom:35px;
+
+}
+
+.login-card label{
+
+    display:block;
+
+    margin-bottom:8px;
+
+    margin-top:20px;
+
+    font-weight:bold;
+
+}
+
+.login-card input{
+
+    width:100%;
+
+    padding:14px;
+
+    border-radius:8px;
+
+    border:2px solid #444;
+
+    background:#1f2522;
+
+    color:white;
+
+    outline:none;
+
+    transition:.25s;
+
+}
+
+.login-card input:focus{
+
+    border-color:#c69742;
+
+    box-shadow:0 0 10px rgba(198,151,66,.3);
+
+}
+
+.login-btn{
+
+    width:100%;
+
+    margin-top:35px;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:8px;
+
+    background:#c69742;
+
+    color:#1e2320;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.login-btn:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 8px 18px rgba(198,151,66,.35);
+
+}
+
+.login-btn:active{
+
+    transform:scale(.98);
+
+}
+
+.divider{
+
+    margin:35px 0;
+
+    height:1px;
+
+    background:#444;
+
+}
+
+.create-btn{
+
+    display:block;
+
+    text-align:center;
+
+    text-decoration:none;
+
+    padding:14px;
+
+    border:2px solid #c69742;
+
+    color:#c69742;
+
+    border-radius:8px;
+
+    transition:.25s;
+
+}
+
+.create-btn:hover{
+
+    background:#c69742;
+
+    color:#1e2320;
+
+    transform:translateY(-2px);
+
+}
+
+/* ---------- Create New Account Stuff ---------- */
+
+.create-container{
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:40px;
+
+}
+
+.create-card{
+
+    width:550px;
+
+    background:#2a302d;
+
+    padding:40px;
+
+    border-radius:12px;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.35);
+
+    border:2px solid transparent;
+
+    transition:.25s;
+
+}
+
+.create-card:hover{
+
+    border-color:#c69742;
+
+}
+
+.back-link{
+
+    color:#bfbfbf;
+
+    text-decoration:none;
+
+    margin-bottom:25px;
+
+    display:inline-block;
+
+}
+
+.back-link:hover{
+
+    color:#c69742;
+
+}
+
+.create-card h1{
+
+    margin-bottom:10px;
+
+}
+
+.create-card label{
+
+    display:block;
+
+    margin-top:25px;
+
+    margin-bottom:8px;
+
+    font-weight:bold;
+
+}
+
+.create-card input[type=text],
+.create-card input[type=password]{
+
+    width:100%;
+
+    padding:14px;
+
+    background:#1f2522;
+
+    border:2px solid #444;
+
+    color:white;
+
+    border-radius:8px;
+
+    outline:none;
+
+    transition:.2s;
+
+}
+
+.create-card input:focus{
+
+    border-color:#c69742;
+
+}
+
+.upload-area{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:20px;
+
+}
+
+.image-preview{
+
+    width:80px;
+
+    height:80px;
+
+    background:#9BC28C;
+
+    color:#1f2522;
+
+    border-radius:8px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    font-size:36px;
+
+    font-weight:bold;
+
+    overflow:hidden;
+
+}
+
+.image-preview img{
+
+    width:100%;
+
+    height:100%;
+
+    object-fit:cover;
+
+}
+
+.upload-button{
+
+    display:inline-block;
+
+    padding:14px 22px;
+
+    border:2px dashed #4b5b73;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    color:#bcd4ff;
+
+    transition:.2s;
+
+}
+
+.upload-button:hover{
+
+    border-color:#c69742;
+
+    color:#c69742;
+
+}
+
+.full{
+
+    width:100%;
+
+    text-align:center;
+
+}
+
+.login-btn{
+
+    margin-top:40px;
+
+}
+
+/* ---------- Admin Profile View Stuff ---------- */
+
+.profile-header{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:50px;
+
+flex-wrap:wrap;
+
+gap:30px;
+
+}
+
+.profile-left{
+
+display:flex;
+
+gap:25px;
+
+align-items:center;
+
+}
+
+.avatar.large{
+
+width:90px;
+
+height:90px;
+
+font-size:34px;
+
+}
+
+.pronouns{
+
+color:#bcbcbc;
+
+margin-top:6px;
+
+}
+
+.profile-actions{
+
+display:flex;
+
+gap:15px;
+
+flex-wrap:wrap;
+
+}
+
+.action-btn{
+
+padding:12px 20px;
+
+background:transparent;
+
+border:1px solid #555;
+
+border-radius:8px;
+
+color:white;
+
+cursor:pointer;
+
+transition:.25s;
+
+}
+
+.action-btn:hover{
+
+background:#c69742;
+
+color:#1e2320;
+
+border-color:#c69742;
+
+}
+
+.section-title{
+
+margin-bottom:20px;
+
+}
+
+.task-list{
+
+display:flex;
+
+flex-direction:column;
+
+gap:18px;
+
+}
+
+.task-card{
+
+background:#2a302d;
+
+border-left:5px solid #444;
+
+padding:22px;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+border-radius:8px;
+
+transition:.25s;
+
+}
+
+.task-card:hover{
+
+transform:translateX(6px);
+
+border-left-color:#c69742;
+
+}
+
+.task-status{
+
+padding:8px 16px;
+
+border-radius:50px;
+
+font-size:.8rem;
+
+font-weight:bold;
+
+}
+
+.completed{
+
+background:#2d5f39;
+
+color:#9cffb4;
+
+}
+
+.progress{
+
+background:#735514;
+
+color:#ffd86d;
+
+}
+
+.backlog{
+
+background:#2f4968;
+
+color:#9cc9ff;
+
+}
+
+.task-section{
+
+    margin-bottom:40px;
+
+}
+
+.task-heading{
+
+    color:#c69742;
+
+    margin-bottom:15px;
+
+    border-bottom:1px solid #444;
+
+    padding-bottom:8px;
+
+}
+
+.empty-message{
+
+    background:#2a302d;
+
+    color:#999;
+
+    padding:22px;
+
+    border-radius:8px;
+
+    font-style:italic;
+
+    text-align:center;
+
+}

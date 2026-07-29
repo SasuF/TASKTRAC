@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Intern Account</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<div class="create-container">
+
+    <div class="create-card">
+
+        <a href="Login.html" class="back-link">← Back</a>
+
+        <h1>NEW INTERN ACCOUNT</h1>
+
+        <p class="subtitle">
+            Create your profile so employers can find and review your information.
+        </p>
+
+        <form action="<create_account_handler>" method="POST" enctype="multipart/form-data">
+
+            <label>Full Name</label>
+
+            <input
+                type="text"
+                name="fullname"
+                placeholder="e.g. Jane Smith"
+                required
+            >
+
+            <label>Pronouns</label>
+
+            <input
+                type="text"
+                name="pronouns"
+                placeholder="e.g. she/her"
+            >
+
+            <label>Password</label>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Create a password"
+                required
+            >
+
+            <label>Headshot</label>
+
+            <div class="upload-area">
+
+                <div class="image-preview" id="preview">
+
+                    <span>?</span>
+
+                </div>
+
+                <label class="upload-button">
+
+                    Upload Photo
+
+                    <input
+                        type="file"
+                        name="headshot"
+                        accept="image/*"
+                        id="headshot"
+                        hidden
+                    >
+
+                </label>
+
+            </div>
+
+            <label>CV / Resume</label>
+
+            <label class="upload-button full">
+
+                Upload Resume
+
+                <input
+                    type="file"
+                    name="resume"
+                    accept=".pdf,.doc,.docx"
+                    hidden
+                >
+
+            </label>
+
+            <button class="login-btn" type="submit">
+                Create Account
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
