@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Intern Portal Login</title>
 
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
 <body>
@@ -20,7 +20,7 @@
             Sign in to access the intern roster.
         </p>
 
-        <form action="<login_handler>" method="POST">
+        <form action="/login" method="POST">
 
             <label>Email</label>
 
@@ -48,7 +48,7 @@
 
         <div class="divider"></div>
 
-        <a href="Create-Account.html" class="create-btn">
+        <a href="create-account" class="create-btn">
             Create Intern Account
         </a>
 

@@ -1,5 +1,6 @@
 import sqlite3
 import bcrypt
+from flask import Flask, render_template
 
 DB_NAME = 'tracker.db'
 
@@ -21,6 +22,7 @@ def create_tables():
         email TEXT NOT NULL UNIQUE,
         password_hash TEXT NOT NULL,
         role TEXT NOT NULL CHECK(role IN ('intern', 'admin')),
+        actual_role TEXT NOT NULL,
         headshot_path TEXT,
         cv_path TEXT,
         is_logged_in INTEGER NOT NULL DEFAULT 0 CHECK (is_logged_in IN (0,1))
@@ -42,7 +44,6 @@ def create_tables():
         )
     """)
 
-
     cur.execute("""
         CREATE TABLE IF NOT EXISTS feedback(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -50,7 +51,7 @@ def create_tables():
         admin_id INTEGER NOT NULL,
         comment TEXT NOT NULL,
         comment_create_date TEXT NOT NULL DEFAULT (datetime('now')),
-        FOREIGN KEY (task_id) REFERENCES tasks (id)
+        FOREIGN KEY (task_id) REFERENCES tasks (id),
         FOREIGN KEY (admin_id) REFERENCES users (id)
         )
     """)
@@ -66,13 +67,14 @@ def hash_password(plain_password: str) -> str:
 def check_password(plain_password: str, stored_hash:str) -> bool:
     return bcrypt.checkpw(plain_password.encode("utf-8"), stored_hash.encode("utf-8"))
 
-def create_user(first_name, last_name, email, plain_password, role):
+def create_user(first_name, last_name, email, plain_password, role, actual_role):
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("""
-        INSERT INTO users(first_name, last_name, email, password_hash, role)
-        values(?,?,?,?,?)
-    """, (first_name, last_name, email, hash_password(plain_password), role))
+        INSERT INTO users(first_name, last_name, email, password_hash, role, actual_role)
+        values(?,?,?,?,?,?)
+    """, (first_name, last_name, email, hash_password(plain_password), role, actual_role))
+    print(conn)
     conn.commit()
     conn.close()
 
@@ -107,6 +109,98 @@ def show_all():
     print("TASKS:")    
     for row in cur.execute("SELECT id, user_id, task FROM tasks"):
         print(row)
+    conn.close()
+
+def log_in(email, password):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT id, role, password_hash
+        FROM users
+        WHERE email = ?
+    """, (email,))
+
+    user = cur.fetchone()
+    conn.close()
+
+    if user is None:
+        return None
+
+    user_id, role, password_hash = user
+
+    if check_password(password, password_hash):
+        return {
+            "id": user_id,
+            "role": role
+        }
+
+    return None
+
+def get_all_interns():
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT id, first_name, last_name, email, headshot_path, cv_path
+        FROM users
+        WHERE role = 'intern'
+    """)
+
+    interns = cur.fetchall()
+    conn.close()
+
+    return interns
+
+def get_intern_profile(user_id):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT id, first_name, last_name, email, headshot_path, cv_path, role
+        FROM users
+        WHERE id = ? AND role = 'intern'
+    """, (user_id,))
+
+    intern = cur.fetchone()
+
+
+    cur.execute("""
+        SELECT id, task, status, upload_date, edit_date
+        FROM tasks
+        WHERE user_id = ?
+        ORDER BY upload_date DESC
+    """, (user_id,))
+
+    tasks = cur.fetchall()
+
+    conn.close()
+
+
+    task_groups = {
+        "planning": [],
+        "start": [],
+        "in progress": [],
+        "completed": []
+    }
+
+
+    for task in tasks:
+        task_groups[task[2]].append(task)
+
+    return intern, task_groups
+
+def update_task_status(task_id, status):
+    conn = get_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        UPDATE tasks
+        SET status = ?, edit_date = datetime('now')
+        WHERE id = ?
+    """, (status, task_id))
+
+    conn.commit()
     conn.close()
 
 if __name__ == "__main__":

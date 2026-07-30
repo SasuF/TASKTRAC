@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Intern Roster</title>
+
+    <style>
+body {
+    background: #111;
+    color: white;
+    font-family: Arial, sans-serif;
+    padding: 40px;
+}
+
+h1 {
+    margin:0;
+    text-transform:uppercase;
+}
+
+.roster {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+}
+
+.intern-card {
+    background: #222;
+    border: 1px solid #555;
+    width: 300px;
+    padding: 25px;
+    border-radius: 8px;
+}
+
+.avatar {
+    width: 60px;
+    height: 60px;
+    background: #d87c65;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+    margin-bottom: 15px;
+}
+
+.header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.buttons {
+    margin-top:25px;
+}
+
+
+button, .button {
+
+    background:#1c2422;
+    border:1px solid #555;
+    color:white;
+
+    padding:10px 20px;
+    margin-right:10px;
+
+    text-decoration:none;
+    border-radius:5px;
+
+}
+
+.intern-card h2 {
+    margin: 5px 0;
+}
+
+.email {
+    color: #aaa;
+    margin-bottom: 20px;
+}
+
+.buttons a {
+    display: inline-block;
+    background: #333;
+    color: white;
+    padding: 10px 20px;
+    margin-right: 10px;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.buttons a:hover {
+    background: #555;
+}
+
+.card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.search-container {
+    margin: 30px 0;
+}
+
+
+.search-box {
+
+    width: 300px;
+
+    background:#1c2422;
+
+    border:1px solid #555;
+
+    color:white;
+
+    padding:12px;
+
+    font-size:16px;
+
+    border-radius:5px;
+
+}
+
+
+.search-box::placeholder {
+    color:#aaa;
+}
+
+.intern-card {
+    cursor: pointer;
+}
+
+.intern-card:hover {
+    border-color:#888;
+    transform:translateY(-3px);
+    transition:0.2s;
+}
+
+.intern-header {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-bottom: 15px;
+
+}
+
+
+.intern-info h2 {
+
+    margin: 0;
+
+}
+
+
+.role {
+
+    color: #aaa;
+
+    margin-top: 5px;
+
+    text-transform: uppercase;
+
+    font-size: 14px;
+
+}
+
+    </style>
+</head>
+
+
+<body>
+
+
+<div class="header">
+
+    <h3>INTERN ROSTER</h3>
+
+    <div>
+        <a class="button" href="/logout">
+            ← Back
+        </a>
+
+        <a class="button" href="/logout">
+            Log Out
+        </a>
+    </div>
+
+</div>
+
+<div class="search-container">
+
+    <input 
+        type="text"
+        id="internSearch"
+        class="search-box"
+        placeholder="Search interns..."
+    >
+
+</div>
+
+<div class="roster">
+
+    {% for intern in interns %}
+
+    <div class="intern-card"
+     data-url="{{ url_for('admin_view_profile', user_id=intern[0]) }}"
+     data-search="
+     {{ intern[1] }}
+     {{ intern[2] }}
+     {{ intern[3] }}">
+
+        <div class="intern-header">
+
+            <div class="avatar">
+                {{ intern[1][0] }}
+            </div>
+
+            <div class="intern-info">
+
+                <h2>
+                    {{ intern[1] }} {{ intern[2] }}
+                </h2>
+
+                <div class="role">
+                    {{ intern[7] }}
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="email">
+            {{ intern[3] }}
+        </div>
+
+
+        <div class="buttons">
+
+            {% if intern[5] %}
+                <a href="/{{ intern[5] }}" 
+                    target="_blank"
+                    onclick="event.stopPropagation();">
+                    View CV
+                </a>
+            {% else %}
+                <span>No CV</span>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    {% endfor %}
+
+</div>
+
+<script>
+
+const searchBox = document.getElementById("internSearch");
+
+const cards = document.querySelectorAll(".intern-card");
+
+
+searchBox.addEventListener("keyup", function() {
+
+    let searchValue = searchBox.value.toLowerCase();
+
+
+    cards.forEach(card => {
+
+        let internInfo = card.dataset.search.toLowerCase();
+
+
+        if (internInfo.includes(searchValue)) {
+
+            card.parentElement.style.display = "";
+
+        } else {
+
+            card.parentElement.style.display = "none";
+
+        }
+
+    });
+
+});
+
+
+</script>
+
+<script>
+document.querySelectorAll(".intern-card").forEach(card => {
+
+    card.addEventListener("click", function() {
+        window.location.href = this.dataset.url;
+    });
+
+});
+</script>
+
+</body>
+</html>

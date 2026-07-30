@@ -1,0 +1,90 @@
+        body {
+            background: #111;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 40px;
+        }
+
+        h1 {
+            margin:0;
+            text-transform:uppercase;
+        }
+
+        .roster {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+        }
+
+        .intern-card {
+            background: #222;
+            border: 1px solid #555;
+            width: 300px;
+            padding: 25px;
+            border-radius: 8px;
+        }
+
+        .avatar {
+            width: 60px;
+            height: 60px;
+            background: #d87c65;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 25px;
+            margin-bottom: 15px;
+        }
+
+        .header {
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+        }
+
+        .buttons {
+            margin-top:25px;
+        }
+
+
+        button, .button {
+
+            background:#1c2422;
+            border:1px solid #555;
+            color:white;
+
+            padding:10px 20px;
+            margin-right:10px;
+
+            text-decoration:none;
+            border-radius:5px;
+
+        }
+
+        .intern-card h2 {
+            margin: 5px 0;
+        }
+
+        .email {
+            color: #aaa;
+            margin-bottom: 20px;
+        }
+
+        .buttons a {
+            display: inline-block;
+            background: #333;
+            color: white;
+            padding: 10px 20px;
+            margin-right: 10px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .buttons a:hover {
+            background: #555;
+        }
+
+        .card-link {
+        text-decoration: none;
+        color: inherit;
+        }
