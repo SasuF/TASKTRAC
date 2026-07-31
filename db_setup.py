@@ -110,9 +110,58 @@ def show_all():
     conn.close()
 
 if __name__ == "__main__":
+    create_tables()  
    # add_task(1, "Complete the project documentation", "in progress")
    # add_feedback(1, 2, "Great job on completing the task!")
     show_all()
-   # create_tables()  
-  #  create_user("John", "Doe", "john.doe@example.com", "password123", "intern")
-  #  create_user("Jane", "Smith", "jane.smith@example.com", "password456", "admin")
+    
+    #create_user("John", "Doe", "john.doe@example.com", "password123", "intern")
+    #create_user("Jane", "Smith", "jane.smith@example.com", "password456", "admin")
+
+def get_users():
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT id, first_name, last_name, email, role FROM users")
+    columns = [desc[0] for desc in cur.description]
+    rows= [dict(zip(columns, row)) for row in cur.fetchall()]
+    conn.close()
+    return rows
+
+def get_user_by_email(email):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("SELECT id, first_name, last_name, email, password_hash, role FROM users WHERE email=?",
+                 (email,))
+    row = cur.fetchone()
+    conn.close()
+    if row is None:
+        return None
+    columns = ["id", "first_name", "last_name", "email", "password_hash", "role"]
+    return dict(zip(columns, row))
+
+def get_tasks(user_id=None):
+    conn = get_connection()
+    cur = conn.cursor()
+    if user_id is not None:
+        cur.execute("SELECT id, user_id, task, status, upload_date FROM tasks WHERE user_id=?", 
+                    (user_id,))
+    else:
+        cur.execute("SELECT id, user_id, task, status FROM tasks")
+    columns = [desc[0] for desc in cur.description]
+    rows= [dict(zip(columns, row)) for row in cur.fetchall()]
+    conn.close()
+    return rows
+
+def get_feedback(task_id=None):
+    conn = get_connection()
+    cur = conn.cursor()
+    if task_id is not None:
+        cur.execute("SELECT id, task_id, admin_id, comment, comment_create_date FROM feedback WHERE task_id=?", 
+                    (task_id,))
+    else:
+        cur.execute("SELECT id, task_id, admin_id, comment, comment_create_date FROM feedback")
+    columns = [desc[0] for desc in cur.description]
+    rows= [dict(zip(columns, row)) for row in cur.fetchall()]
+    conn.close()
+    return rows
+
