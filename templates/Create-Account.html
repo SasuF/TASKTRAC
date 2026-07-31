@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Intern Account</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+<div class="create-container">
+
+    <div class="create-card">
+
+        <a href="/logout" class="back-link">← Back</a>
+
+        <h1>NEW INTERN ACCOUNT</h1>
+
+        <p class="subtitle">
+            Create your profile so employers can find and review your information.
+        </p>
+
+        <form action="/create-account" method="POST">
+
+            <label>First Name</label>
+
+            <input
+                type="text"
+                name="firstname"
+                id="firstname"
+                placeholder="e.g. Jane"
+                required
+            >
+
+            <label>Last Name</label>
+
+            <input
+                type="text"
+                name="lastname"
+                id="lastname"
+                placeholder="e.g. Smith"
+                required
+            >
+
+            <label>Email</label>
+
+            <input
+                type="text"
+                name="email"
+                id="email"
+                placeholder="e.g. ____@conatix.com"
+                required
+            >
+
+            <label>Role</label>
+
+            <input
+                type="text"
+                name="actual_role"
+                id="actual_role"
+                placeholder="e.g. software intern"
+                required
+            >
+
+            <label>Password</label>
+
+            <input
+                type="password"
+                name="password"
+                id="password"
+                required
+            >
+
+            <label>Headshot</label>
+
+            <div class="upload-area">
+
+                <label class="upload-button">
+
+                    Upload Photo
+
+                    <input
+                        type="file"
+                        name="headshot"
+                        accept="image/*"
+                        id="headshot"
+                        hidden
+                        required
+                    >
+
+                </label>
+
+            </div>
+
+            <label>CV / Resume</label>
+
+            <label class="upload-button full">
+
+                Upload Resume
+
+                <input
+                    type="file"
+                    name="resume"
+                    accept=".pdf,.doc,.docx"
+                    hidden
+                    required
+                >
+
+            </label>
+
+            <button class="login-btn" type="submit">
+                Create Account
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>

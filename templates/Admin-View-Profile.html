@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Intern Profile</title>
+
+<style>
+
+body {
+    background:#101514;
+    color:white;
+    font-family: Arial, sans-serif;
+    padding:40px;
+}
+
+
+.header {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+
+.profile {
+    display:flex;
+    align-items:center;
+    gap:20px;
+}
+
+
+.avatar {
+    width:70px;
+    height:70px;
+    background:#d97c62;
+    border-radius:8px;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    font-size:30px;
+}
+
+
+h1 {
+    margin:0;
+    text-transform:uppercase;
+}
+
+
+.subtitle {
+    color:#aaa;
+}
+
+
+.buttons {
+    margin-top:25px;
+}
+
+
+button, .button {
+
+    background:#1c2422;
+    border:1px solid #555;
+    color:white;
+
+    padding:10px 20px;
+    margin-right:10px;
+
+    text-decoration:none;
+    border-radius:5px;
+
+}
+
+
+.warning {
+    border-color:#e2b84b;
+    color:#e2b84b;
+}
+
+
+.updated {
+    border-color:#7fa47b;
+    color:#7fa47b;
+}
+
+
+.task-title {
+    margin-top:40px;
+    color:#aaa;
+    letter-spacing:2px;
+}
+
+
+
+.task {
+
+    background:#202826;
+
+    border:1px solid #34403c;
+
+    padding:20px;
+
+    margin-top:15px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+
+
+.task-name {
+    font-size:18px;
+}
+
+
+.date {
+    color:#888;
+    margin-top:8px;
+}
+
+
+
+.status {
+
+    padding:8px 15px;
+
+    border-radius:5px;
+
+    text-transform:uppercase;
+
+}
+
+
+
+.planning {
+    color:#9bb9ff;
+    border:1px solid #9bb9ff;
+}
+
+
+.start {
+    color:#9bb9ff;
+    border:1px solid #9bb9ff;
+}
+
+
+.in-progress {
+
+    color:#e2b84b;
+    border:1px solid #e2b84b;
+
+}
+
+
+.completed {
+
+    color:#8dc98a;
+    border:1px solid #8dc98a;
+
+}
+
+.add-task {
+
+    margin-top:30px;
+
+    background:#202826;
+
+    border:1px solid #34403c;
+
+    padding:20px;
+
+    border-radius:8px;
+
+}
+
+
+.add-task input {
+
+    width:60%;
+
+    background:#111;
+
+    border:1px solid #555;
+
+    color:white;
+
+    padding:12px;
+
+    font-size:16px;
+
+}
+
+
+.add-task button {
+
+    background:#d6a63a;
+
+    color:black;
+
+    border:none;
+
+    padding:12px 20px;
+
+    margin-left:10px;
+
+    cursor:pointer;
+
+}
+
+.status {
+    padding:8px 15px;
+    border-radius:5px;
+    background:#202826;
+    cursor:pointer;
+    text-transform:uppercase;
+}
+
+
+.status option {
+    color:black;
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="header">
+
+    <h3>ADMIN VIEW</h3>
+
+    <div>
+        <a class="button" href="{{ url_for('intern_roster') }}">
+            ← Back
+        </a>
+
+        <a class="button" href="/logout">
+            Log Out
+        </a>
+    </div>
+
+</div>
+
+
+
+<div class="profile">
+
+
+    <div class="avatar">
+        {{ intern[1][0] }}
+    </div>
+
+
+    <div>
+
+        <h1>
+            {{ intern[1] }} {{ intern[2] }}
+        </h1>
+
+        <div class="subtitle">
+            {{ intern[7] }} · {{ intern[3] }}
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<div class="buttons">
+
+    {% if tasks|length < 2 %}
+    <span class="button warning">
+        NEEDS MORE TASKS
+    </span>
+    {% endif %}
+
+    {% if intern[5] %}
+    <a class="button" href="/{{ intern[5] }}">
+        VIEW CV
+    </a>
+    {% endif %}
+
+
+</div>
+
+
+<div class="add-task">
+
+    <h3>
+        ADD TASK
+    </h3>
+
+
+    <form method="POST"
+          action="{{ url_for('add_task_to_intern', user_id=intern[0]) }}">
+
+        <input
+            type="text"
+            name="task"
+            placeholder="Enter task..."
+            required
+        >
+
+
+        <button type="submit">
+            ADD TASK
+        </button>
+
+    </form>
+
+</div>
+
+
+<h3 class="task-title">
+    TASK LOG:
+</h3>
+
+
+
+{% for status, task_list in tasks.items() %}
+
+<h2>
+    {{ status|upper }}
+    ({{ task_list|length }})
+</h2>
+
+
+{% for task in task_list %}
+
+<div class="task">
+
+    <div>
+
+        <div class="task-name">
+            {{ task[1] }}
+        </div>
+
+
+        <div class="date">
+
+            {% if task[4] %}
+                Updated {{ task[4] }}
+            {% else %}
+                Uploaded {{ task[3] }}
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <form method="POST"
+          action="{{ url_for('update_status', task_id=task[0]) }}">
+
+        <select 
+    class="status {{ task[2].replace(' ', '-') }}"
+    name="status"
+    onchange="this.form.submit()">
+
+            <option value="planning"
+            {% if task[2] == "planning" %}selected{% endif %}>
+                PLANNING
+            </option>
+
+            <option value="start"
+            {% if task[2] == "start" %}selected{% endif %}>
+                START
+            </option>
+
+            <option value="in progress"
+            {% if task[2] == "in progress" %}selected{% endif %}>
+                IN PROGRESS
+            </option>
+
+            <option value="completed"
+            {% if task[2] == "completed" %}selected{% endif %}>
+                COMPLETED
+            </option>
+
+        </select>
+
+    </form>
+
+
+</div>
+
+{% endfor %}
+
+{% endfor %}
+
+
+
+
+</body>
+
+</html>
