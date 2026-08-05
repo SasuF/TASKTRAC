@@ -75,16 +75,41 @@ def check_password(plain_password: str, stored_hash:str) -> bool:
 
 def create_user(first_name, last_name, email, plain_password, role, actual_role):
     conn = get_connection()
-    cur = conn.cursor()
-    cur.execute("""
-        INSERT INTO users(first_name, last_name, email, password_hash, role, actual_role)
-        values(%s,%s,%s,%s,%s,%s)
-    """, (first_name, last_name, email, hash_password(plain_password), role, actual_role))
-    print(conn)
-    
-    conn.commit()
-    cur.close()
-    conn.close()
+
+    try:
+        cur = conn.cursor()
+
+        cur.execute("""
+            INSERT INTO users(
+                first_name,
+                last_name,
+                email,
+                password_hash,
+                role,
+                actual_role
+            )
+            VALUES(%s,%s,%s,%s,%s,%s)
+        """, (
+            first_name,
+            last_name,
+            email,
+            hash_password(plain_password),
+            role,
+            actual_role
+        ))
+
+        conn.commit()
+        print("USER INSERTED SUCCESSFULLY")
+
+    except Exception as e:
+        conn.rollback()
+        print("CREATE USER FAILED:")
+        print(e)
+        raise
+
+    finally:
+        cur.close()
+        conn.close()
 
 def add_task(user_id, task, status='planning'):
     conn = get_connection()

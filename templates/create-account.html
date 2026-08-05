@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,10 +23,9 @@
             Create your profile so employers can find and review your information.
         </p>
 
-        <form action="/create-account" method="POST">
+        <form action="/create-account" method="POST" enctype="multipart/form-data">
 
-            <label>First Name</label>
-
+            <label for="firstname">First Name</label>
             <input
                 type="text"
                 name="firstname"
@@ -34,8 +34,7 @@
                 required
             >
 
-            <label>Last Name</label>
-
+            <label for="lastname">Last Name</label>
             <input
                 type="text"
                 name="lastname"
@@ -44,18 +43,16 @@
                 required
             >
 
-            <label>Email</label>
-
+            <label for="email">Email</label>
             <input
-                type="text"
+                type="email"
                 name="email"
                 id="email"
-                placeholder="e.g. ____@conatix.com"
+                placeholder="e.g. jane@conatix.com"
                 required
             >
 
-            <label>Role</label>
-
+            <label for="actual_role">Role</label>
             <input
                 type="text"
                 name="actual_role"
@@ -64,8 +61,7 @@
                 required
             >
 
-            <label>Password</label>
-
+            <label for="password">Password</label>
             <input
                 type="password"
                 name="password"
@@ -84,15 +80,18 @@
                     <input
                         type="file"
                         name="headshot"
-                        accept="image/*"
                         id="headshot"
+                        accept="image/*"
                         hidden
                         required
                     >
 
                 </label>
 
+                <p id="headshot-name"></p>
+
             </div>
+
 
             <label>CV / Resume</label>
 
@@ -103,12 +102,16 @@
                 <input
                     type="file"
                     name="resume"
+                    id="resume"
                     accept=".pdf,.doc,.docx"
                     hidden
                     required
                 >
 
             </label>
+
+            <p id="resume-name"></p>
+
 
             <button class="login-btn" type="submit">
                 Create Account
@@ -120,7 +123,29 @@
 
 </div>
 
+
 <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+<script>
+    const headshotInput = document.getElementById("headshot");
+    const resumeInput = document.getElementById("resume");
+
+    const headshotName = document.getElementById("headshot-name");
+    const resumeName = document.getElementById("resume-name");
+
+    headshotInput.addEventListener("change", function () {
+        headshotName.textContent = this.files[0]
+            ? this.files[0].name
+            : "";
+    });
+
+    resumeInput.addEventListener("change", function () {
+        resumeName.textContent = this.files[0]
+            ? this.files[0].name
+            : "";
+    });
+</script>
 
 </body>
 </html>
+```
