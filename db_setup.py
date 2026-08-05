@@ -1,12 +1,16 @@
-import sqlite3
+import psycopg2
 import bcrypt
 from flask import Flask, render_template
 
-DB_NAME = 'tracker.db'
+DB_NAME = 'tasktrac'
 
 def get_connection():
-    conn = sqlite3.connect(DB_NAME)
-    conn.execute("PRAGMA foreign_keys = ON")
+    conn = psycopg2.connect(
+        host="localhost",
+        database="tasktrac",
+        user="tasktrac_user",
+        password="your_password"
+    )
     return conn
 
 def create_tables():
@@ -16,7 +20,7 @@ def create_tables():
     # users table
     cur.execute("""
         CREATE TABLE IF NOT EXISTS users(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         first_name TEXT NOT NULL,
         last_name TEXT NOT NULL,
         email TEXT NOT NULL UNIQUE,
@@ -32,13 +36,13 @@ def create_tables():
     # TASKS table
     cur.execute("""
         CREATE TABLE IF NOT EXISTS tasks(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         user_id INTEGER NOT NULL,
         task TEXT NOT NULL,
         status TEXT NOT NULL default 'planning'
             CHECK (status IN ('planning','start', 'in progress', 'completed')),
-        upload_date TEXT NOT NULL DEFAULT (datetime('now')),
-        edit_date TEXT,
+        upload_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        edit_date TIMESTAMP,
         awaiting_tasks INTEGER NOT NULL DEFAULT 0 CHECK (awaiting_tasks IN (0,1)),
         FOREIGN KEY (user_id) REFERENCES users (id)
         )
@@ -46,17 +50,19 @@ def create_tables():
 
     cur.execute("""
         CREATE TABLE IF NOT EXISTS feedback(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id SERIAL PRIMARY KEY,
         task_id INTEGER NOT NULL,
         admin_id INTEGER NOT NULL,
         comment TEXT NOT NULL,
-        comment_create_date TEXT NOT NULL DEFAULT (datetime('now')),
+        comment_create_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (task_id) REFERENCES tasks (id),
         FOREIGN KEY (admin_id) REFERENCES users (id)
         )
     """)
 
+    
     conn.commit()
+    cur.close()
     conn.close()
     print(f'tables created in {DB_NAME}')
 
@@ -72,10 +78,12 @@ def create_user(first_name, last_name, email, plain_password, role, actual_role)
     cur = conn.cursor()
     cur.execute("""
         INSERT INTO users(first_name, last_name, email, password_hash, role, actual_role)
-        values(?,?,?,?,?,?)
+        values(%s,%s,%s,%s,%s,%s)
     """, (first_name, last_name, email, hash_password(plain_password), role, actual_role))
     print(conn)
+    
     conn.commit()
+    cur.close()
     conn.close()
 
 def add_task(user_id, task, status='planning'):
@@ -83,9 +91,11 @@ def add_task(user_id, task, status='planning'):
     cur = conn.cursor()
     cur.execute("""
         INSERT INTO tasks(user_id, task, status)
-        VALUES (?, ?, ?)
+        VALUES (%s, %s, %s)
     """, (user_id, task, status))
+    
     conn.commit()
+    cur.close()
     conn.close()
     print(f"task added for user {user_id}: {task}")
 
@@ -94,9 +104,11 @@ def add_feedback(task_id, admin_id, comment):
     cur = conn.cursor()
     cur.execute("""
         INSERT INTO feedback(task_id, admin_id, comment)
-        VALUES (?, ?, ?)
+        VALUES (%s, %s, %s)
     """, (task_id, admin_id, comment))
+    
     conn.commit()
+    cur.close()
     conn.close()
     print(f"feedback added to task{task_id}")
 
@@ -104,11 +116,14 @@ def show_all():
     conn = get_connection()
     cur = conn.cursor()
     print("USERS:")
-    for row in cur.execute("SELECT id, first_name, last_name, role FROM users"):
+    cur.execute("SELECT id, first_name, last_name, role FROM users")
+    for row in cur.fetchall():
         print(row)
     print("TASKS:")    
-    for row in cur.execute("SELECT id, user_id, task FROM tasks"):
+    cur.execute("SELECT id, user_id, task FROM tasks")
+    for row in cur.fetchall():
         print(row)
+    cur.close()
     conn.close()
 
 def log_in(email, password):
@@ -118,23 +133,28 @@ def log_in(email, password):
     cur.execute("""
         SELECT id, role, password_hash
         FROM users
-        WHERE email = ?
+        WHERE email = %s
     """, (email,))
 
     user = cur.fetchone()
-    conn.close()
 
     if user is None:
+        cur.close()
+        conn.close()
         return None
 
     user_id, role, password_hash = user
 
     if check_password(password, password_hash):
+        cur.close()
+        conn.close()
         return {
             "id": user_id,
             "role": role
         }
 
+    cur.close()
+    conn.close()
     return None
 
 def get_all_interns():
@@ -148,6 +168,7 @@ def get_all_interns():
     """)
 
     interns = cur.fetchall()
+    cur.close()
     conn.close()
 
     return interns
@@ -159,7 +180,7 @@ def get_intern_profile(user_id):
     cur.execute("""
         SELECT id, first_name, last_name, email, headshot_path, cv_path, role
         FROM users
-        WHERE id = ? AND role = 'intern'
+        WHERE id = %s AND role = 'intern'
     """, (user_id,))
 
     intern = cur.fetchone()
@@ -168,13 +189,12 @@ def get_intern_profile(user_id):
     cur.execute("""
         SELECT id, task, status, upload_date, edit_date
         FROM tasks
-        WHERE user_id = ?
+        WHERE user_id = %s
         ORDER BY upload_date DESC
     """, (user_id,))
 
     tasks = cur.fetchall()
 
-    conn.close()
 
 
     task_groups = {
@@ -188,6 +208,8 @@ def get_intern_profile(user_id):
     for task in tasks:
         task_groups[task[2]].append(task)
 
+    cur.close()
+    conn.close()
     return intern, task_groups
 
 def update_task_status(task_id, status):
@@ -196,11 +218,14 @@ def update_task_status(task_id, status):
 
     cur.execute("""
         UPDATE tasks
-        SET status = ?, edit_date = datetime('now')
-        WHERE id = ?
+        SET status = %s,
+            edit_date = CURRENT_TIMESTAMP
+        WHERE id = %s
     """, (status, task_id))
 
+    
     conn.commit()
+    cur.close()
     conn.close()
 
 if __name__ == "__main__":
@@ -218,15 +243,17 @@ def get_users():
     cur.execute("SELECT id, first_name, last_name, email, role FROM users")
     columns = [desc[0] for desc in cur.description]
     rows= [dict(zip(columns, row)) for row in cur.fetchall()]
+    cur.close()
     conn.close()
     return rows
 
 def get_user_by_email(email):
     conn = get_connection()
     cur = conn.cursor()
-    cur.execute("SELECT id, first_name, last_name, email, password_hash, role FROM users WHERE email=?",
+    cur.execute("SELECT id, first_name, last_name, email, password_hash, role FROM users WHERE email=%s",
                  (email,))
     row = cur.fetchone()
+    cur.close()
     conn.close()
     if row is None:
         return None
@@ -237,12 +264,13 @@ def get_tasks(user_id=None):
     conn = get_connection()
     cur = conn.cursor()
     if user_id is not None:
-        cur.execute("SELECT id, user_id, task, status, upload_date FROM tasks WHERE user_id=?", 
+        cur.execute("SELECT id, user_id, task, status, upload_date FROM tasks WHERE user_id=%s", 
                     (user_id,))
     else:
         cur.execute("SELECT id, user_id, task, status FROM tasks")
     columns = [desc[0] for desc in cur.description]
     rows= [dict(zip(columns, row)) for row in cur.fetchall()]
+    cur.close()
     conn.close()
     return rows
 
@@ -250,12 +278,13 @@ def get_feedback(task_id=None):
     conn = get_connection()
     cur = conn.cursor()
     if task_id is not None:
-        cur.execute("SELECT id, task_id, admin_id, comment, comment_create_date FROM feedback WHERE task_id=?", 
+        cur.execute("SELECT id, task_id, admin_id, comment, comment_create_date FROM feedback WHERE task_id=%s", 
                     (task_id,))
     else:
         cur.execute("SELECT id, task_id, admin_id, comment, comment_create_date FROM feedback")
     columns = [desc[0] for desc in cur.description]
     rows= [dict(zip(columns, row)) for row in cur.fetchall()]
+    cur.close()
     conn.close()
     return rows
 

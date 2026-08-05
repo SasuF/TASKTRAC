@@ -5,9 +5,6 @@ from db_setup import create_user, create_tables, log_in, get_all_interns, get_in
 app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
 
-#creates tables upon starting up the app
-create_tables()
-
 
 #login
 @app.route("/login", methods=["GET", "POST"])
@@ -130,6 +127,8 @@ def intern_roster():
 @app.route("/self-view/<int:user_id>")
 def self_view(user_id):
     if session.get("role") != "intern":
+        return "Access denied", 403
+    elif user_id != session["user_id"]:
         return "Access denied", 403
 
     intern, tasks = get_intern_profile(user_id)
