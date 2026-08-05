@@ -8,8 +8,8 @@ def get_connection():
     conn = psycopg2.connect(
         host="localhost",
         database="tasktrac",
-        user="tasktrac_user",
-        password="your_password"
+        user="tasktrac_admin",
+        password="admin1@3"
     )
     return conn
 
