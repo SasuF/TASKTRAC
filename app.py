@@ -62,7 +62,7 @@ def create_account():
         password = request.form["password"]
         actual_role = request.form["actual_role"]
 
-        create_user(
+        success = create_user(
             first_name,
             last_name,
             email,
@@ -71,7 +71,10 @@ def create_account():
             actual_role
         )
 
-        return redirect("/login")
+        if not success:
+            return "Account creation failed. Email may already exist.", 500
+
+        return redirect(url_for("login"))
 
     return render_template("create-account.html")
 
@@ -110,7 +113,7 @@ def update_status(task_id):
 #page routes
 @app.route("/")
 def home():
-    return redirect("/login")
+    return redirect(url_for("login"))
 
 @app.route("/intern-roster")
 def intern_roster():

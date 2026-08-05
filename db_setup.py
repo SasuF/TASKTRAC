@@ -74,9 +74,10 @@ def check_password(plain_password: str, stored_hash:str) -> bool:
     return bcrypt.checkpw(plain_password.encode("utf-8"), stored_hash.encode("utf-8"))
 
 def create_user(first_name, last_name, email, plain_password, role, actual_role):
-    conn = get_connection()
+    conn = None
 
     try:
+        conn = get_connection()
         cur = conn.cursor()
 
         cur.execute("""
@@ -88,7 +89,7 @@ def create_user(first_name, last_name, email, plain_password, role, actual_role)
                 role,
                 actual_role
             )
-            VALUES(%s,%s,%s,%s,%s,%s)
+            VALUES (%s,%s,%s,%s,%s,%s)
         """, (
             first_name,
             last_name,
@@ -99,17 +100,22 @@ def create_user(first_name, last_name, email, plain_password, role, actual_role)
         ))
 
         conn.commit()
-        print("USER INSERTED SUCCESSFULLY")
 
-    except Exception as e:
-        conn.rollback()
-        print("CREATE USER FAILED:")
-        print(e)
-        raise
-
-    finally:
         cur.close()
         conn.close()
+
+        return True
+
+    except Exception as e:
+        if conn:
+            conn.rollback()
+
+        print("DATABASE ERROR:", repr(e))
+
+        if conn:
+            conn.close()
+
+        return False
 
 def add_task(user_id, task, status='planning'):
     conn = get_connection()
