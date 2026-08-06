@@ -54,7 +54,7 @@ def logout():
 #allows creation of new accounts
 @app.route("/create-account", methods=["GET", "POST"])
 def create_account():
-
+    print(request.method, request.path, file=sys.stderr, flush=True)
     if request.method == "POST":
         print("Create-Account got called", file=sys.stderr, flush=True)
 
