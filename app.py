@@ -12,7 +12,6 @@ app.secret_key = secrets.token_hex(32)
 def login():
 
     if request.method == "POST":
-        print("Hello from worker", file=sys.stderr, flush=True)
         email = request.form["email"]
         password = request.form["password"]
 
@@ -57,6 +56,7 @@ def logout():
 def create_account():
 
     if request.method == "POST":
+        print("Create-Account got called", file=sys.stderr, flush=True)
 
         first_name = request.form["firstname"]
         last_name = request.form["lastname"]
@@ -74,11 +74,12 @@ def create_account():
         )
 
         if not success:
-            print("Account creation failed. Email may already exist.")
+            print("Create Account failed", file=sys.stderr, flush=True)
             return "Account creation failed. Email may already exist.", 500
 
+        print("Create Account worked?", file=sys.stderr, flush=True)
         return redirect(url_for("login"))
-    print("something has gone wrong, evidently")
+    print("Somethign went wrong, evidently", file=sys.stderr, flush=True)
 
     return render_template("create-account.html")
 
