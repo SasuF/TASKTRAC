@@ -146,7 +146,7 @@ def self_view(user_id):
         return "Intern not found", 404
 
     return render_template(
-        "Self-View.html",
+        "self-view.html",
         intern=intern,
         tasks=tasks
     )
@@ -163,7 +163,7 @@ def admin_view_profile(user_id):
         return "Intern not found", 404
 
     return render_template(
-        "Admin-View-Profile.html",
+        "admin-view-profile.html",
         intern=intern,
         tasks=tasks
     )
