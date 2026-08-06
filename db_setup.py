@@ -62,7 +62,6 @@ def create_tables():
 
     
     conn.commit()
-    cur.close()
     conn.close()
     print(f'tables created in {DB_NAME}')
 
@@ -101,7 +100,6 @@ def create_user(first_name, last_name, email, plain_password, role, actual_role)
 
         conn.commit()
 
-        cur.close()
         conn.close()
 
         return True
@@ -126,7 +124,7 @@ def add_task(user_id, task, status='planning'):
     """, (user_id, task, status))
     
     conn.commit()
-    cur.close()
+
     conn.close()
     print(f"task added for user {user_id}: {task}")
 
@@ -139,7 +137,7 @@ def add_feedback(task_id, admin_id, comment):
     """, (task_id, admin_id, comment))
     
     conn.commit()
-    cur.close()
+
     conn.close()
     print(f"feedback added to task{task_id}")
 
@@ -154,7 +152,7 @@ def show_all():
     cur.execute("SELECT id, user_id, task FROM tasks")
     for row in cur.fetchall():
         print(row)
-    cur.close()
+
     conn.close()
 
 def log_in(email, password):
@@ -170,21 +168,21 @@ def log_in(email, password):
     user = cur.fetchone()
 
     if user is None:
-        cur.close()
+
         conn.close()
         return None
 
     user_id, role, password_hash = user
 
     if check_password(password, password_hash):
-        cur.close()
+
         conn.close()
         return {
             "id": user_id,
             "role": role
         }
 
-    cur.close()
+
     conn.close()
     return None
 
@@ -199,7 +197,7 @@ def get_all_interns():
     """)
 
     interns = cur.fetchall()
-    cur.close()
+
     conn.close()
 
     return interns
@@ -239,7 +237,7 @@ def get_intern_profile(user_id):
     for task in tasks:
         task_groups[task[2]].append(task)
 
-    cur.close()
+
     conn.close()
     return intern, task_groups
 
@@ -256,7 +254,7 @@ def update_task_status(task_id, status):
 
     
     conn.commit()
-    cur.close()
+
     conn.close()
 
 if __name__ == "__main__":
@@ -274,7 +272,7 @@ def get_users():
     cur.execute("SELECT id, first_name, last_name, email, role FROM users")
     columns = [desc[0] for desc in cur.description]
     rows= [dict(zip(columns, row)) for row in cur.fetchall()]
-    cur.close()
+
     conn.close()
     return rows
 
@@ -284,7 +282,7 @@ def get_user_by_email(email):
     cur.execute("SELECT id, first_name, last_name, email, password_hash, role FROM users WHERE email=%s",
                  (email,))
     row = cur.fetchone()
-    cur.close()
+
     conn.close()
     if row is None:
         return None
@@ -301,7 +299,7 @@ def get_tasks(user_id=None):
         cur.execute("SELECT id, user_id, task, status FROM tasks")
     columns = [desc[0] for desc in cur.description]
     rows= [dict(zip(columns, row)) for row in cur.fetchall()]
-    cur.close()
+
     conn.close()
     return rows
 
@@ -315,7 +313,7 @@ def get_feedback(task_id=None):
         cur.execute("SELECT id, task_id, admin_id, comment, comment_create_date FROM feedback")
     columns = [desc[0] for desc in cur.description]
     rows= [dict(zip(columns, row)) for row in cur.fetchall()]
-    cur.close()
+
     conn.close()
     return rows
 
