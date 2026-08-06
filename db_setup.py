@@ -29,7 +29,8 @@ def create_tables():
         actual_role TEXT NOT NULL,
         headshot_path TEXT,
         cv_path TEXT,
-        is_logged_in INTEGER NOT NULL DEFAULT 0 CHECK (is_logged_in IN (0,1))
+        is_logged_in INTEGER NOT NULL DEFAULT 0 CHECK (is_logged_in IN (0,1)),
+        needs_new_tasl BOOL NOT NULL DEFAULT FALSE
         )
     """)
     
