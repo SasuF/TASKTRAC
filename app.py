@@ -11,7 +11,7 @@ app.secret_key = secrets.token_hex(32)
 def login():
 
     if request.method == "POST":
-        print("a thing occured")
+        print("Hello from worker", file=sys.stderr, flush=True)
         email = request.form["email"]
         password = request.form["password"]
 
