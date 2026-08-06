@@ -72,9 +72,11 @@ def create_account():
         )
 
         if not success:
+            print("Account creation failed. Email may already exist.")
             return "Account creation failed. Email may already exist.", 500
 
         return redirect(url_for("login"))
+    print("something has gone wrong, evidently")
 
     return render_template("create-account.html")
 
