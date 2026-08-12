@@ -52,13 +52,18 @@
             >
 
             <label for="actual_role">Role</label>
-            <input
-                type="text"
-                name="actual_role"
-                id="actual_role"
-                placeholder="e.g. software intern"
-                required
-            >
+            <select
+            name="actual_role"
+            id="actual_role"
+            required>
+
+            <option value="" disabled selected>Select your role</option>
+            <option value="software_intern">Software Intern</option>
+            <option value="software_engineer">Software Engineer</option>
+            <option value="product_manager">Product Manager</option>
+            <option value="designer">Designer</option>
+
+            </select>
 
             <label for="password">Password</label>
             <input

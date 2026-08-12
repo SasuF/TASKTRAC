@@ -30,7 +30,7 @@ def create_tables():
         headshot_path TEXT,
         cv_path TEXT,
         is_logged_in INTEGER NOT NULL DEFAULT 0 CHECK (is_logged_in IN (0,1)),
-        needs_new_tasl BOOL NOT NULL DEFAULT FALSE
+        needs_new_task BOOL NOT NULL DEFAULT FALSE
         )
     """)
     
