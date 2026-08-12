@@ -2,9 +2,11 @@ from flask import Flask, render_template, request, redirect, url_for, session
 import secrets
 from db_setup import create_user, create_tables, log_in, get_all_interns, get_intern_profile, add_task, update_task_status
 import sys
+import os
 
 app = Flask(__name__)
-app.secret_key = secrets.token_hex(32)
+
+app.secret_key = os.environ["SECRET_KEY"]
 
 
 #login
