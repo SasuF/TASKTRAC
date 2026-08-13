@@ -3,7 +3,7 @@
 <head>
     <title>Intern Roster</title>
 
-    <style>
+<style>
 body {
     background: #111;
     color: white;
@@ -17,18 +17,18 @@ h1 {
 }
 
 .roster {
-    display: flex;
-    grid-template-columns: repeat(5, 1fr);
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 25px;
 }
 
 .intern-card {
     background: #222;
     border: 1px solid #555;
-    width: 300px;
+    width: auto;
     padding: 25px;
     border-radius: 8px;
+    box-sizing: border-box;
 }
 
 .avatar {
