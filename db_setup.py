@@ -288,10 +288,10 @@ def get_intern_profile(user_id):
     tasks = cur.fetchall()
 
     task_groups = {
-        "feedback": [],
         "current": [],
         "next": [],
-        "completed": []
+        "question/request": [],
+        "feedback": []
     }
 
     for task in tasks:
