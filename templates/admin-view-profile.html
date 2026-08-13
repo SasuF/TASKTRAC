@@ -367,6 +367,7 @@ button:hover, .button:hover {
 
 <!-- variable for later -->
 <input type="hidden"
+id="taskStatus"
 name="status"
 value="current">
 
@@ -434,130 +435,82 @@ value="current">
     What is your current task/what is the status:
 </h3>
 
-<button type="button" class="add-task-btn" onclick="openTaskModal('current')">
+<button type="button"
+        class="add-task-btn"
+        onclick="openTaskModal('current', 'Current Task/Status', 'Enter information...', 'Update')">
     Add Current Task/Status
 </button>
 
-<div id="taskModal" class="task-modal">
-
-    <div class="task-modal-content">
-
-        <div class="task-modal-header">
-            <h2>Current Task/Status</h2>
-
-            <button type="button"
-                    class="close-task-modal"
-                    onclick="closeTaskModal()">
-                ×
-            </button>
-        </div>
-
-        <form method="POST"
-              action="{{ url_for('add_task_to_intern', user_id=intern[0]) }}"
-              onsubmit="return validateTask()">
-
-            <textarea
-                id="taskInput"
-                name="task"
-                placeholder="Enter information..."
-                required
-                maxlength="14000"
-            ></textarea>
-
-            <div class="task-word-count">
-                <span id="wordCount">0</span> / 2000 words
-            </div>
-
-            <button type="submit" class="submit-task-btn">
-                Update
-            </button>
-
-        </form>
-
-    </div>
-
-</div>
 
 <!-- Next -->
 <h3 class="task-title">
     What are you doing next:
 </h3>
 
-<button type="button" class="add-task-btn" onclick="openTaskModal('next')">
+<button type="button"
+        class="add-task-btn"
+        onclick="openTaskModal('next', 'What Comes Next', 'Enter information...', 'Update')">
     Add Update on What's Next
 </button>
 
-<div id="taskModal" class="task-modal">
 
-    <div class="task-modal-content">
-
-        <div class="task-modal-header">
-            <h2>What's Next</h2>
-
-            <button type="button"
-                    class="close-task-modal"
-                    onclick="closeTaskModal()">
-                ×
-            </button>
-        </div>
-
-        <form method="POST"
-              action="{{ url_for('add_task_to_intern', user_id=intern[0]) }}"
-              onsubmit="return validateTask()">
-
-            <textarea
-                id="taskInput"
-                name="task"
-                placeholder="Enter information..."
-                required
-                maxlength="14000"
-            ></textarea>
-
-            <div class="task-word-count">
-                <span id="wordCount">0</span> / 2000 words
-            </div>
-
-            <button type="submit" class="submit-task-btn">
-                Update
-            </button>
-
-        </form>
-
-    </div>
-
-</div>
-
-<!-- Need New task? -->
+<!-- Need New Task? -->
 <h3 class="task-title">
     Need New Task?:
 </h3>
+
 
 <!-- Questions -->
 <h3 class="task-title">
     Are there any questions/issues/bottlenecks that we can help with?:
 </h3>
 
-<button type="button" class="add-task-btn" onclick="openTaskModal('question/request')">
+<button type="button"
+        class="add-task-btn"
+        onclick="openTaskModal('question/request', 'Question / Request', 'Enter information...', 'Send')">
     Add Question/Request
 </button>
 
+
+<!-- Feedback -->
+<h3 class="task-title">
+    Feedback:
+</h3>
+
+<button type="button"
+        class="add-task-btn"
+        onclick="openTaskModal('feedback', 'Feedback', 'Enter feedback...', 'Send')">
+    Add Comment
+</button>
+
+
+<!-- ONE MODAL -->
 <div id="taskModal" class="task-modal">
 
     <div class="task-modal-content">
 
         <div class="task-modal-header">
-            <h2>What's Next</h2>
+
+            <h2 id="taskModalTitle">
+                Current Task/Status
+            </h2>
 
             <button type="button"
                     class="close-task-modal"
                     onclick="closeTaskModal()">
                 ×
             </button>
+
         </div>
 
         <form method="POST"
               action="{{ url_for('add_task_to_intern', user_id=intern[0]) }}"
               onsubmit="return validateTask()">
+
+            <input type="hidden"
+                   id="taskStatus"
+                   name="status"
+                   value="current">
 
             <textarea
                 id="taskInput"
@@ -571,7 +524,9 @@ value="current">
                 <span id="wordCount">0</span> / 2000 words
             </div>
 
-            <button type="submit" class="submit-task-btn">
+            <button type="submit"
+                    id="submitTaskButton"
+                    class="submit-task-btn">
                 Update
             </button>
 
@@ -581,75 +536,50 @@ value="current">
 
 </div>
 
-<!-- Feedback -->
-<h3 class="task-title">
-    Feedback:
-</h3>
-
-<button type="button" class="add-task-btn" onclick="openTaskModal('feedback')">
-    Add Comment:
-</button>
-
-<div id="taskModal" class="task-modal">
-
-    <div class="task-modal-content">
-
-        <div class="task-modal-header">
-            <h2>Feedback</h2>
-
-            <button type="button"
-                    class="close-task-modal"
-                    onclick="closeTaskModal()">
-                ×
-            </button>
-        </div>
-
-        <form method="POST"
-              action="{{ url_for('add_task_to_intern', user_id=intern[0]) }}"
-              onsubmit="return validateTask()">
-
-            <textarea
-                id="taskInput"
-                name="task"
-                placeholder="Enter feedback..."
-                required
-                maxlength="14000"
-            ></textarea>
-
-            <div class="task-word-count">
-                <span id="wordCount">0</span> / 2000 words
-            </div>
-
-            <button type="submit" class="submit-task-btn">
-                Send
-            </button>
-
-        </form>
-
-    </div>
-
-</div>
 
 <script>
-function openTaskModal(status) {
+
+function openTaskModal(status, title, placeholder, buttonText) {
+
     const modal = document.getElementById("taskModal");
+    const statusInput = document.getElementById("taskStatus");
+    const taskInput = document.getElementById("taskInput");
+    const titleElement = document.getElementById("taskModalTitle");
+    const submitButton = document.getElementById("submitTaskButton");
 
-    document.getElementById("taskStatus").value = status;
+    // Set the status that will be sent to Flask
+    statusInput.value = status;
 
+    // Change modal text
+    titleElement.textContent = title;
+    taskInput.placeholder = placeholder;
+    submitButton.textContent = buttonText;
+
+    // Clear previous text
+    taskInput.value = "";
+
+    // Reset word counter
+    document.getElementById("wordCount").textContent = "0";
+
+    // Show modal
     modal.style.display = "flex";
 
-    document.getElementById("taskInput").focus();
+    // Focus textarea
+    taskInput.focus();
 }
 
 
 function closeTaskModal() {
+
     document.getElementById("taskModal").style.display = "none";
+
 }
 
 
+/* Word counter */
+
 const taskInput = document.getElementById("taskInput");
 const wordCount = document.getElementById("wordCount");
-
 
 taskInput.addEventListener("input", function () {
 
@@ -660,13 +590,19 @@ taskInput.addEventListener("input", function () {
     }
 
     if (words.length > 2000) {
-        this.value = words.slice(0, 2000).join(" ");
+
+        this.value = words
+            .slice(0, 2000)
+            .join(" ");
+
         words = this.value.trim().split(/\s+/);
     }
 
     wordCount.textContent = words.length;
 });
 
+
+/* Final validation */
 
 function validateTask() {
 
@@ -677,7 +613,9 @@ function validateTask() {
         : text.split(/\s+/);
 
     if (words.length > 2000) {
+
         alert("Tasks are limited to 2,000 words.");
+
         return false;
     }
 
@@ -685,7 +623,7 @@ function validateTask() {
 }
 
 
-/* Close when clicking outside the modal */
+/* Close when clicking outside modal */
 
 document.getElementById("taskModal").addEventListener("click", function(event) {
 
@@ -705,6 +643,7 @@ document.addEventListener("keydown", function(event) {
     }
 
 });
+
 </script>
 </body>
 
