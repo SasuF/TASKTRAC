@@ -297,12 +297,15 @@ def get_intern_profile(user_id):
     }
 
     # Groups for old tasks
-    old_tasks = {
-        "current": [],
-        "next": [],
-        "question/request": [],
-        "feedback": []
-    }
+    old_tasks = {}
+
+    for task in tasks:
+        status = task[2]
+
+        if task[3] >= one_week_ago:
+            recent_tasks.setdefault(status, []).append(task)
+        else:
+            old_tasks.setdefault(status, []).append(task)
 
     one_week_ago = datetime.now() - timedelta(days=7)
 
