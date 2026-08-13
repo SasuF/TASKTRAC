@@ -67,6 +67,8 @@ def create_account():
         email = request.form["email"]
         password = request.form["password"]
         actual_role = request.form["actual_role"]
+        headshot = request.files.get("headshot")
+        resume = request.files.get("resume")
 
         success = create_user(
             first_name,
@@ -74,7 +76,9 @@ def create_account():
             email,
             password,
             "intern",
-            actual_role
+            actual_role,
+            headshot,
+            resume
         )
 
         if not success:
@@ -83,7 +87,7 @@ def create_account():
 
         print("Create Account worked?", file=sys.stderr, flush=True)
         return redirect(url_for("login"))
-    print("Somethign went wrong, evidently", file=sys.stderr, flush=True)
+    print("Something went wrong, evidently", file=sys.stderr, flush=True)
 
     return render_template("create-account.html")
 
