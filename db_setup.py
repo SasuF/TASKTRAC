@@ -317,17 +317,34 @@ def get_tasks(user_id=None):
     conn.close()
     return rows
 
-def get_feedback(task_id=None):
+# unfinished!!!
+def remove_task(user_id=None):
     conn = get_connection()
     cur = conn.cursor()
-    if task_id is not None:
-        cur.execute("SELECT id, task_id, admin_id, comment, comment_create_date FROM feedback WHERE task_id=%s", 
-                    (task_id,))
+    if user_id is not None:
+        cur.execute("SELECT id, user_id, task, status, upload_date FROM tasks WHERE user_id=%s", 
+                    (user_id,))
     else:
-        cur.execute("SELECT id, task_id, admin_id, comment, comment_create_date FROM feedback")
+        cur.execute("SELECT id, user_id, task, status FROM tasks")
     columns = [desc[0] for desc in cur.description]
     rows= [dict(zip(columns, row)) for row in cur.fetchall()]
 
     conn.close()
     return rows
+
+
+# We transfered the feedback table to concatonate with task table, so, disregard
+#def get_feedback(task_id=None):
+#    conn = get_connection()
+#    cur = conn.cursor()
+#    if task_id is not None:
+#        cur.execute("SELECT id, task_id, admin_id, comment, comment_create_date FROM feedback WHERE task_id=%s", 
+#                    (task_id,))
+#    else:
+#        cur.execute("SELECT id, task_id, admin_id, comment, comment_create_date FROM feedback")
+#    columns = [desc[0] for desc in cur.description]
+#    rows= [dict(zip(columns, row)) for row in cur.fetchall()]
+#
+#    conn.close()
+#    return rows
 
