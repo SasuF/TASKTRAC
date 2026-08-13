@@ -71,9 +71,6 @@ button, .button {
 
 }
 
-
-/* Darken buttons when hovering */
-
 button:hover, .button:hover {
     background:#111;
 }
@@ -90,6 +87,8 @@ button:hover, .button:hover {
     color:#7fa47b;
 }
 
+
+/* TASKS */
 
 .task-title {
     margin-top:40px;
@@ -151,25 +150,143 @@ button:hover, .button:hover {
     background:#111;
 }
 
+.add-task-btn {
 
-.add-task {
+    background:#d6a63a;
+    border:1px solid #d6a63a;
 
-    margin-top:30px;
+    color:#111;
+
+    padding:8px 14px;
+
+    border-radius:5px;
+
+    cursor:pointer;
+
+    font-size:13px;
+
+    text-transform:uppercase;
+
+}
+
+
+.add-task-btn:hover {
+
+    background:#b98e2f;
+    border-color:#b98e2f;
+
+}
+
+
+.task-modal {
+
+    display:none;
+
+    position:fixed;
+
+    z-index:1000;
+
+    inset:0;
+
+    background:rgba(0, 0, 0, 0.75);
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+
+/* Modal box */
+
+.task-modal-content {
+
+    width:min(600px, 90%);
 
     background:#202826;
 
     border:1px solid #34403c;
 
-    padding:20px;
-
     border-radius:8px;
+
+    padding:25px;
+
+    box-shadow:0 10px 40px rgba(0, 0, 0, 0.6);
 
 }
 
 
-.add-task input {
+/* Modal header */
 
-    width:60%;
+.task-modal-header {
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:20px;
+
+}
+
+
+.task-modal-header h2 {
+
+    margin:0;
+
+    font-size:20px;
+
+    text-transform:uppercase;
+
+    letter-spacing:1px;
+
+}
+
+
+/* X button */
+
+.close-task-modal {
+
+    background:none !important;
+
+    border:none !important;
+
+    color:#888;
+
+    font-size:28px;
+
+    line-height:1;
+
+    padding:0 !important;
+
+    margin:0 !important;
+
+    cursor:pointer;
+
+}
+
+
+.close-task-modal:hover {
+
+    background:none !important;
+
+    color:white;
+
+}
+
+
+/* Task textarea */
+
+#taskInput {
+
+    width:100%;
+
+    min-height:200px;
+
+    box-sizing:border-box;
+
+    resize:vertical;
 
     background:#111;
 
@@ -179,28 +296,71 @@ button:hover, .button:hover {
 
     padding:12px;
 
-    font-size:16px;
+    font-family:Arial, sans-serif;
+
+    font-size:15px;
+
+    border-radius:5px;
+
+    outline:none;
 
 }
 
 
-.add-task button {
+#taskInput:focus {
 
-    background:#d6a63a;
+    border-color:#888;
 
-    color:black;
+}
 
-    border:none;
 
-    padding:12px 20px;
+/* Word counter */
 
-    margin-left:10px;
+.task-word-count {
+
+    color:#888;
+
+    font-size:12px;
+
+    margin-top:8px;
+
+    margin-bottom:20px;
+
+    text-align:right;
+
+}
+
+
+/* Submit button */
+
+.submit-task-btn {
+
+    background:#d6a63a !important;
+
+    border:1px solid #d6a63a !important;
+
+    color:#111 !important;
+
+    padding:10px 20px;
+
+    border-radius:5px;
 
     cursor:pointer;
 
 }
 
+
+.submit-task-btn:hover {
+
+    background:#b98e2f !important;
+
+    border-color:#b98e2f !important;
+
+}
+
+
 </style>
+
 
 </head>
 
@@ -321,7 +481,7 @@ button:hover, .button:hover {
 
 <!-- Need New Task? -->
 <h3 class="task-title">
-    Need New Task?:
+    Need new task?:
 </h3>
     <form method="POST"
           action="{{ url_for('request_task', user_id=intern[0]) }}"
