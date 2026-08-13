@@ -96,6 +96,8 @@ def add_task_to_intern(user_id):
     task = request.form["task"]
     status = request.form["status"]
 
+    print("STATUS RECEIVED:", status)
+    
     add_task(
         user_id,
         task,
