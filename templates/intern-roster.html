@@ -146,12 +146,17 @@ button, .button {
 }
 
 
+
 .intern-info h2 {
 
     margin: 0;
 
 }
 
+.warning {
+    border-color:#e2b84b;
+    color:#e2b84b;
+}
 
 .role {
 
@@ -236,7 +241,21 @@ button, .button {
 
 
         <div class="buttons">
+            {% if intern[0] in needing_task_ids %}
+            <span class="button warning">
+                NEEDS NEW TASK
+            </span>
+            {% endif %}
 
+            {% if intern[5] %}
+                <a href="/{{ intern[5] }}" 
+                    target="_blank"
+                    onclick="event.stopPropagation();">
+                    View CV
+                </a>
+            {% else %}
+                <span>No CV</span>
+            {% endif %}
             {% if intern[5] %}
                 <a href="/{{ intern[5] }}" 
                     target="_blank"

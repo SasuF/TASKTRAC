@@ -130,6 +130,35 @@ def add_task(user_id, task, status='next'):
     conn.close()
     print(f"task added for user {user_id}: {task}")
 
+def set_needs_new_task(user_id, needs=True):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        UPDATE users
+        SET needs_new_task = %s
+        WHERE id = %s
+    """, (needs, user_id))
+    
+    conn.commit()
+
+    conn.close()
+    print(f"Set needs_new_task for user {user_id} to {needs}")
+
+def get_interns_needing_tasks():
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT id, first_name, last_name, email
+        FROM users
+        WHERE role = 'intern' AND needs_new_task = TRUE
+    """)
+    
+    columns = [desc[0] for desc in cur.description]
+    rows = [dict(zip(columns, row)) for row in cur.fetchall()]
+
+    conn.close()
+    return rows
+
 def add_feedback(user_id, task, status='feedback'):
     conn = get_connection()
     cur = conn.cursor()

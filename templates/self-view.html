@@ -264,7 +264,14 @@ button:hover, .button:hover {
         VIEW CV
     </a>
     {% endif %}
-
+  
+    <form method="POST"
+          action="{{ url_for('request_task', user_id=intern[0]) }}"
+          style="display:inline;">
+        <button type="submit">
+            REQUEST NEW TASK
+        </button>
+    </form>
 
 </div>
 
