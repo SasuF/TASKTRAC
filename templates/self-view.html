@@ -263,7 +263,7 @@ button:hover, .button:hover {
           action="{{ url_for('request_task', user_id=intern[0]) }}"
           style="display:inline;">
         <button type="submit">
-            {% if intern[7] %}
+            {% if intern[7] is sameas true %}
             REQUEST NEW TASK
             {% else %}
             NO LONGER NEED TASK
