@@ -304,7 +304,7 @@ def get_intern_profile(user_id):
         "feedback": []
     }
 
-    one_week_ago = datetime.now(timezone.utc) - timedelta(days=7)
+    one_week_ago = datetime.now() - timedelta(days=7)
 
     for task in tasks:
 
