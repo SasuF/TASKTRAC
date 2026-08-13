@@ -399,7 +399,6 @@ button, .button {
           action="{{ url_for('update_status', task_id=task[0]) }}">
 
         <select 
-    class="status {{ task[2].replace(' ', '-') }}"
     name="status"
     onchange="this.form.submit()">
 
