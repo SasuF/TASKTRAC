@@ -241,15 +241,12 @@ def get_intern_profile(user_id):
 
     tasks = cur.fetchall()
 
-
-
     task_groups = {
-        "planning": [],
-        "start": [],
-        "in progress": [],
-        "completed": []
+        "feedback": [],
+        "current": [],
+        "next": [],
+        "complete": []
     }
-
 
     for task in tasks:
         task_groups[task[2]].append(task)
