@@ -368,19 +368,19 @@ button, .button {
     name="status"
     onchange="this.form.submit()">
 
-            <option value="planning"
-            {% if task[2] == "planning" %}selected{% endif %}>
+            <option value="feedback"
+            {% if task[2] == "feedback" %}selected{% endif %}>
+                FEEDBACK
+            </option>
+
+            <option value="next"
+            {% if task[2] == "next" %}selected{% endif %}>
                 NEXT
             </option>
 
-            <option value="start"
-            {% if task[2] == "start" %}selected{% endif %}>
+            <option value="current"
+            {% if task[2] == "current" %}selected{% endif %}>
                 CURRENT
-            </option>
-
-            <option value="in progress"
-            {% if task[2] == "in progress" %}selected{% endif %}>
-                IN PROGRESS
             </option>
 
             <option value="completed"
