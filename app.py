@@ -106,7 +106,7 @@ def request_task(user_id):
     elif user_id != session["user_id"]:
         return "Access denied", 403
 
-    set_needs_new_task(user_id, True)
+    set_needs_new_task(user_id)
     return redirect(request.referrer)        
 
 

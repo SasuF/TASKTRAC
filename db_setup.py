@@ -130,9 +130,20 @@ def add_task(user_id, task, status='next'):
     conn.close()
     print(f"task added for user {user_id}: {task}")
 
-def set_needs_new_task(user_id, needs=True):
+def set_needs_new_task(user_id):
     conn = get_connection()
     cur = conn.cursor()
+    needs = cur.execute("""
+            SELECT needs_new_task
+            FROM users
+            WHERE id = %s
+            """)
+
+    if needs == True:
+        needs = False
+    else:
+        needs = True
+
     cur.execute("""
         UPDATE users
         SET needs_new_task = %s
