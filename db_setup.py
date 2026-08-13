@@ -237,7 +237,7 @@ def get_all_interns():
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT id, first_name, last_name, email, headshot_path, cv_path, actual_role
+        SELECT id, first_name, last_name, email, headshot_path, cv_path, actual_role, needs_new_task
         FROM users
         WHERE role = 'intern'
     """)
@@ -253,7 +253,7 @@ def get_intern_profile(user_id):
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT id, first_name, last_name, email, headshot_path, cv_path, actual_role, needs_new_task
+        SELECT id, first_name, last_name, email, headshot_path, cv_path, actual_role
         FROM users
         WHERE id = %s AND role = 'intern'
     """, (user_id,))
