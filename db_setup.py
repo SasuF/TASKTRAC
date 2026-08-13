@@ -89,6 +89,7 @@ def create_user(first_name, last_name, email, plain_password, role, actual_role)
                 password_hash,
                 role,
                 actual_role
+                needs_new_task
             )
             VALUES (%s,%s,%s,%s,%s,%s)
         """, (
@@ -97,7 +98,8 @@ def create_user(first_name, last_name, email, plain_password, role, actual_role)
             email,
             hash_password(plain_password),
             role,
-            actual_role
+            actual_role,
+            False
         ))
 
         conn.commit()
@@ -266,7 +268,7 @@ def get_intern_profile(user_id):
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT id, first_name, last_name, email, headshot_path, cv_path, actual_role
+        SELECT id, first_name, last_name, email, headshot_path, cv_path, actual_role, needs_new_task
         FROM users
         WHERE id = %s AND role = 'intern'
     """, (user_id,))
