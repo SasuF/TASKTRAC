@@ -245,7 +245,7 @@ def get_intern_profile(user_id):
         "feedback": [],
         "current": [],
         "next": [],
-        "complete": []
+        "completed": []
     }
 
     for task in tasks:
