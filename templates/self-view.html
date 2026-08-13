@@ -253,12 +253,6 @@ button:hover, .button:hover {
 
 <div class="buttons">
 
-    {% if tasks|length < 2 %}
-    <span class="button warning">
-        NEEDS MORE TASKS
-    </span>
-    {% endif %}
-
     {% if intern[5] %}
     <a class="button" href="/{{ intern[5] }}">
         VIEW CV
