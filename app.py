@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import secrets
-from db_setup import create_user, remove_task, log_in, get_all_interns, get_intern_profile, add_feedback, add_task, update_task_status
+from db_setup import (create_user, get_all_interns, get_intern_profile, remove_task, log_in, 
+get_all_interns, get_intern_profile, add_feedback, add_task, update_task_status, 
+set_needs_new_task, get_interns_needing_tasks)
 import sys
 import os
 
@@ -56,6 +58,9 @@ def logout():
 #allows creation of new accounts
 @app.route("/create-account", methods=["GET", "POST"])
 def create_account():
+    if session.get("role") != "admin":
+        return "Access denied", 403
+    
     print("hm?", file=sys.stderr, flush=True)
     print(request.method, request.path, file=sys.stderr, flush=True)
     if request.method == "POST":
@@ -97,6 +102,18 @@ def add_task_to_intern(user_id):
     )
 
     return redirect(request.referrer)
+
+@app.route("/request-task/<int:user_id>", methods=["POST"])
+def request_task(user_id):
+    if session.get("role") != "intern":
+        return "Access denied", 403
+    elif user_id != session["user_id"]:
+        return "Access denied", 403
+
+    set_needs_new_task(user_id, True)
+    return redirect(request.referrer)        
+
+
 
 @app.route("/add-feedback/<int:user_id>", methods=["POST"])
 def add_feedback_to_intern(user_id):
@@ -145,10 +162,14 @@ def intern_roster():
         return "Access denied", 403
 
     interns = get_all_interns()
+    needing_tasks = get_interns_needing_tasks()
+    needing_tasks_ids = {i['id'] for i in needing_tasks}
 
     return render_template(
         "intern-roster.html",
-        interns=interns
+        interns=interns,
+        needing_tasks=needing_tasks,
+        needing_tasks_ids=needing_tasks_ids
     )
 
 @app.route("/self-view/<int:user_id>")
