@@ -41,7 +41,7 @@ def create_tables():
         user_id INTEGER NOT NULL,
         task TEXT NOT NULL,
         status TEXT NOT NULL default 'planning'
-            CHECK (status IN ('planning','start', 'in progress', 'completed')),
+            CHECK (status IN ('current','next', 'completed', 'feedback')),
         upload_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         edit_date TIMESTAMP,
         awaiting_tasks INTEGER NOT NULL DEFAULT 0 CHECK (awaiting_tasks IN (0,1)),

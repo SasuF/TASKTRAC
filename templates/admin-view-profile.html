@@ -294,11 +294,35 @@ button, .button {
 
 </div>
 
+<div class="add-task">
+
+    <h3>
+        ADD FEEDBACK
+    </h3>
+
+    <form method="POST"
+          action="{{ url_for('add_task_to_intern', user_id=intern[0]) }}">
+
+        <input
+            type="text"
+            name="task"
+            placeholder="Enter comment..."
+            required
+        >
+
+
+        <button type="submit">
+            SEND
+        </button>
+
+    </form>
+
+</div>
 
 <div class="add-task">
 
     <h3>
-        ADD TASK
+        SEND
     </h3>
 
 
