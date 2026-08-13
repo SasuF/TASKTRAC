@@ -40,7 +40,7 @@ def create_tables():
         id SERIAL PRIMARY KEY,
         user_id INTEGER NOT NULL,
         task TEXT NOT NULL,
-        status TEXT NOT NULL default 'planning'
+        status TEXT NOT NULL default 'next'
             CHECK (status IN ('current','next', 'completed', 'feedback')),
         upload_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         edit_date TIMESTAMP,
