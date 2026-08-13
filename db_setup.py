@@ -40,8 +40,8 @@ def create_tables():
         id SERIAL PRIMARY KEY,
         user_id INTEGER NOT NULL,
         task TEXT NOT NULL,
-        status TEXT NOT NULL default 'next'
-            CHECK (status IN ('current','next', 'completed', 'feedback')),
+        status TEXT NOT NULL
+            CHECK (status IN ('current','next', 'question/request', 'feedback')),
         upload_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         edit_date TIMESTAMP,
         awaiting_tasks INTEGER NOT NULL DEFAULT 0 CHECK (awaiting_tasks IN (0,1)),
@@ -119,7 +119,7 @@ def create_user(first_name, last_name, email, plain_password, role, actual_role)
 
         return False
 
-def add_task(user_id, task, status='next'):
+def add_task(user_id, task, status):
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("""

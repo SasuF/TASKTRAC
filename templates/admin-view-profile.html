@@ -448,8 +448,12 @@ button:hover, .button:hover {
         </div>
 
         <form method="POST"
-              action="{{ url_for('add_task_to_intern', user_id=intern[0]) }}"
+              action="{{ url_for('add_task_to_intern', user_id=intern[0], 'current_task_status') }}"
               onsubmit="return validateTask()">
+
+            <input type="hidden"
+            name="status"
+            value="current">
 
             <textarea
                 id="taskInput"
@@ -497,8 +501,12 @@ button:hover, .button:hover {
         </div>
 
         <form method="POST"
-              action="{{ url_for('add_task_to_intern', user_id=intern[0]) }}"
+              action="{{ url_for('add_task_to_intern', user_id=intern[0], 'current_task_status') }}"
               onsubmit="return validateTask()">
+
+            <input type="hidden"
+            name="status"
+            value="next">
 
             <textarea
                 id="taskInput"
@@ -552,6 +560,10 @@ button:hover, .button:hover {
               action="{{ url_for('add_task_to_intern', user_id=intern[0]) }}"
               onsubmit="return validateTask()">
 
+            <input type="hidden"
+            name="status"
+            value="question/request">
+
             <textarea
                 id="taskInput"
                 name="task"
@@ -598,8 +610,12 @@ button:hover, .button:hover {
         </div>
 
         <form method="POST"
-              action="{{ url_for('add_task_to_intern', user_id=intern[0]) }}"
+              action="{{ url_for('add_task_to_intern', user_id=intern[0], 'current_task_status') }}"
               onsubmit="return validateTask()">
+
+            <input type="hidden"
+            name="status"
+            value="feedback">
 
             <textarea
                 id="taskInput"

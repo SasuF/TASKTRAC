@@ -94,10 +94,12 @@ def create_account():
 def add_task_to_intern(user_id):
 
     task = request.form["task"]
+    status = request.form["status"]
 
     add_task(
         user_id,
-        task
+        task,
+        status
     )
 
     return redirect(request.referrer)
