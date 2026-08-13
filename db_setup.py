@@ -176,18 +176,18 @@ def get_interns_needing_tasks():
 
 
 # This is also now outdated
-#def add_feedback(user_id, task, status='feedback'):
-#    conn = get_connection()
-#    cur = conn.cursor()
-#    cur.execute("""
-#        INSERT INTO tasks(user_id, task, status)
-#        VALUES (%s, %s, %s)
-#    """, (user_id, task, status))
+def add_feedback(user_id, task, status='feedback'):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        INSERT INTO tasks(user_id, task, status)
+        VALUES (%s, %s, %s)
+    """, (user_id, task, status))
     
-#    conn.commit()
+    conn.commit()
 
-#    conn.close()
-#    print(f"task added for user {user_id}: {task}")
+    conn.close()
+    print(f"task added for user {user_id}: {task}")
 
 
 # Below method is for an out of date database
