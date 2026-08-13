@@ -368,7 +368,8 @@ button:hover, .button:hover {
         </button>
 
     </form>
-
+    
+    {% if status != "feedback" %}
     <form method="POST"
           action="{{ url_for('update_status', task_id=task[0]) }}">
 
@@ -395,6 +396,7 @@ button:hover, .button:hover {
         </select>
 
     </form>
+    {% endif %}
     </div>
 
 </div>
