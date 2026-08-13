@@ -62,13 +62,14 @@ def create_account():
     if request.method == "POST":
         print("Create-Account got called", file=sys.stderr, flush=True)
 
+        headshot_path = None
+        cv_path = None
+
         first_name = request.form["firstname"]
         last_name = request.form["lastname"]
         email = request.form["email"]
         password = request.form["password"]
         actual_role = request.form["actual_role"]
-        headshot = request.files.get("headshot")
-        resume = request.files.get("resume")
 
         success = create_user(
             first_name,
@@ -76,14 +77,12 @@ def create_account():
             email,
             password,
             "intern",
-            actual_role,
-            headshot,
-            resume
+            actual_role
         )
 
         if not success:
             print("Create Account failed", file=sys.stderr, flush=True)
-            return "Account creation failed. Email may already exist.", 500
+            return "Account creation failed.", 500
 
         print("Create Account worked?", file=sys.stderr, flush=True)
         return redirect(url_for("login"))

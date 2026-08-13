@@ -74,7 +74,7 @@ def hash_password(plain_password: str) -> str:
 def check_password(plain_password: str, stored_hash:str) -> bool:
     return bcrypt.checkpw(plain_password.encode("utf-8"), stored_hash.encode("utf-8"))
 
-def create_user(first_name, last_name, email, plain_password, role, actual_role, headshot_path, cv_path):
+def create_user(first_name, last_name, email, plain_password, role, actual_role):
     conn = None
 
     try:
@@ -89,11 +89,9 @@ def create_user(first_name, last_name, email, plain_password, role, actual_role,
                 password_hash,
                 role,
                 actual_role,
-                needs_new_task,
-                headshot_path,
-                cv_path
+                needs_new_task
             )
-            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
+            VALUES (%s,%s,%s,%s,%s,%s,%s)
         """, (
             first_name,
             last_name,
@@ -101,9 +99,7 @@ def create_user(first_name, last_name, email, plain_password, role, actual_role,
             hash_password(plain_password),
             role,
             actual_role,
-            False,
-            headshot_path, 
-            cv_path
+            False
         ))
 
         conn.commit()
