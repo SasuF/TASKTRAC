@@ -241,21 +241,12 @@ button, .button {
 
 
         <div class="buttons">
-            {% if intern[0] in needing_task_ids %}
+            {% if intern[7] %}
             <span class="button warning">
                 NEEDS NEW TASK
             </span>
             {% endif %}
 
-            {% if intern[5] %}
-                <a href="/{{ intern[5] }}" 
-                    target="_blank"
-                    onclick="event.stopPropagation();">
-                    View CV
-                </a>
-            {% else %}
-                <span>No CV</span>
-            {% endif %}
             {% if intern[5] %}
                 <a href="/{{ intern[5] }}" 
                     target="_blank"
