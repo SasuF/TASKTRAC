@@ -128,9 +128,6 @@ def delete_task(task_id):
 @app.route("/update-task-status/<int:task_id>", methods=["POST"])
 def update_status(task_id):
 
-    if session.get("role") != "admin":
-        return "Access denied", 403
-
     status = request.form["status"]
 
     update_task_status(task_id, status)
