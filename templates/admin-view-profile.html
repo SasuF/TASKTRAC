@@ -383,6 +383,16 @@ button, .button {
 
     </div>
 
+    <form method="POST"
+        action="{{ url_for('delete_task', task_id=task[0]) }}"
+        style="display:inline;">
+
+        <button type="submit"
+                onclick="return confirm('Are you certain?');">
+            REMOVE
+        </button>
+
+    </form>
 
     <form method="POST"
           action="{{ url_for('update_status', task_id=task[0]) }}">

@@ -318,19 +318,17 @@ def get_tasks(user_id=None):
     return rows
 
 # unfinished!!!
-def remove_task(user_id=None):
+def remove_task(task_id):
     conn = get_connection()
     cur = conn.cursor()
-    if user_id is not None:
-        cur.execute("SELECT id, user_id, task, status, upload_date FROM tasks WHERE user_id=%s", 
-                    (user_id,))
-    else:
-        cur.execute("SELECT id, user_id, task, status FROM tasks")
-    columns = [desc[0] for desc in cur.description]
-    rows= [dict(zip(columns, row)) for row in cur.fetchall()]
 
+    cur.execute(
+        "DELETE FROM tasks WHERE id=%s",
+        (task_id,)
+    )
+
+    conn.commit()
     conn.close()
-    return rows
 
 
 # We transfered the feedback table to concatonate with task table, so, disregard

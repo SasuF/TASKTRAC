@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import secrets
-from db_setup import create_user, create_tables, log_in, get_all_interns, get_intern_profile, add_feedback, add_task, update_task_status
+from db_setup import create_user, remove_task, log_in, get_all_interns, get_intern_profile, add_feedback, add_task, update_task_status
 import sys
 import os
 
@@ -89,9 +89,6 @@ def create_account():
 @app.route("/add-task/<int:user_id>", methods=["POST"])
 def add_task_to_intern(user_id):
 
-    if session.get("role") != "admin":
-        return "Access denied", 403
-
     task = request.form["task"]
 
     add_task(
@@ -99,12 +96,7 @@ def add_task_to_intern(user_id):
         task
     )
 
-    return redirect(
-        url_for(
-            "admin_view_profile",
-            user_id=user_id
-        )
-    )
+    return redirect(request.referrer)
 
 @app.route("/add-feedback/<int:user_id>", methods=["POST"])
 def add_feedback_to_intern(user_id):
@@ -125,6 +117,13 @@ def add_feedback_to_intern(user_id):
             user_id=user_id
         )
     )
+
+@app.route("/remove-task/<int:task_id>", methods=["POST"])
+def delete_task(task_id):
+    remove_task(task_id)
+
+    return redirect(request.referrer)
+
 
 @app.route("/update-task-status/<int:task_id>", methods=["POST"])
 def update_status(task_id):
