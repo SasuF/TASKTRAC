@@ -208,7 +208,7 @@ def get_intern_profile(user_id):
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT id, first_name, last_name, email, headshot_path, cv_path, role
+        SELECT id, first_name, last_name, email, headshot_path, cv_path, actual_role
         FROM users
         WHERE id = %s AND role = 'intern'
     """, (user_id,))
