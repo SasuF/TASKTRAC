@@ -553,6 +553,29 @@ button:hover, .button:hover {
 
 {% endfor %}
 
+<!-- Outdated things -->
+<h3 class="task-title">
+    Old comments and discussion:
+</h3>
+
+{% for task in old_tasks %}
+
+<div class="task">
+
+    <div>
+        <div class="task-name">
+            {{ task[1] }}
+        </div>
+
+        <div class="date">
+            {{ task[3] }}
+        </div>
+    </div>
+
+</div>
+
+{% endfor %}
+
 <!-- ONE MODAL -->
 <div id="taskModal" class="task-modal">
 
