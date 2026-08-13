@@ -270,13 +270,13 @@ def get_intern_profile(user_id):
     cur = conn.cursor()
 
     cur.execute("""
-        SELECT id, first_name, last_name, email, headshot_path, cv_path, actual_role, needs_new_task
+        SELECT id, first_name, last_name, email, headshot_path,
+               cv_path, actual_role, needs_new_task
         FROM users
         WHERE id = %s AND role = 'intern'
     """, (user_id,))
 
     intern = cur.fetchone()
-
 
     cur.execute("""
         SELECT id, task, status, upload_date, edit_date
@@ -287,19 +287,35 @@ def get_intern_profile(user_id):
 
     tasks = cur.fetchall()
 
-    task_groups = {
+    # Groups for recent tasks
+    recent_tasks = {
         "current": [],
         "next": [],
         "question/request": [],
         "feedback": []
     }
 
-    for task in tasks:
-        task_groups[task[2]].append(task)
+    # Groups for old tasks
+    old_tasks = {
+        "current": [],
+        "next": [],
+        "question/request": [],
+        "feedback": []
+    }
 
+    one_week_ago = datetime.now(timezone.utc) - timedelta(days=7)
+
+    for task in tasks:
+
+        if task[3] >= one_week_ago:
+            recent_tasks[task[2]].append(task)
+
+        else:
+            old_tasks[task[2]].append(task)
 
     conn.close()
-    return intern, task_groups
+
+    return intern, recent_tasks, old_tasks
 
 def update_task_status(task_id, status):
     conn = get_connection()

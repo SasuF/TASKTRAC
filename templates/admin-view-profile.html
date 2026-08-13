@@ -436,6 +436,23 @@ button:hover, .button:hover {
     Add Current Task/Status
 </button>
 
+{% for task in tasks["current"] %}
+
+<div class="task">
+
+    <div>
+        <div class="task-name">
+            {{ task[1] }}
+        </div>
+
+        <div class="date">
+            {{ task[3] }}
+        </div>
+    </div>
+
+</div>
+
+{% endfor %}
 
 <!-- Next -->
 <h3 class="task-title">

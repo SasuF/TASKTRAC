@@ -182,7 +182,7 @@ def self_view(user_id):
     elif user_id != session["user_id"]:
         return "Access denied", 403
 
-    intern, tasks = get_intern_profile(user_id)
+    intern, recent_tasks, old_tasks = get_intern_profile(user_id)
 
     if intern is None:
         return "Intern not found", 404
@@ -190,7 +190,8 @@ def self_view(user_id):
     return render_template(
         "self-view.html",
         intern=intern,
-        tasks=tasks
+        tasks=recent_tasks,
+        old_tasks=old_tasks
     )
 
 @app.route("/admin-view-profile/<int:user_id>")
