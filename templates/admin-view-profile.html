@@ -363,9 +363,7 @@ button:hover, .button:hover {
 
 </head>
 
-
 <body>
-
 
 <div class="header">
 
@@ -408,8 +406,6 @@ button:hover, .button:hover {
 
 </div>
 
-
-
 <div class="buttons">
 
     {% if tasks|length < 2 %}
@@ -427,44 +423,22 @@ button:hover, .button:hover {
 
 </div>
 
-<div class="add-task">
 
-    <h3>
-        SEND FEEDBACK
-    </h3>
+<!-- Current -->
+<h3 class="task-title">
+    What is your current task/what is the status:
+</h3>
 
-    <form method="POST"
-          action="{{ url_for('add_feedback_to_intern', user_id=intern[0]) }}">
-
-        <input
-            type="text"
-            name="task"
-            placeholder="Enter comment..."
-            required
-        >
-
-
-        <button type="submit">
-            SEND
-        </button>
-
-    </form>
-
-</div>
-
-<!-- ADD TASK BUTTON -->
 <button type="button" class="add-task-btn" onclick="openTaskModal()">
-    ADD TASK
+    Add Current Task/Status
 </button>
 
-
-<!-- TASK MODAL -->
 <div id="taskModal" class="task-modal">
 
     <div class="task-modal-content">
 
         <div class="task-modal-header">
-            <h2>ADD TASK</h2>
+            <h2>Current Task/Status</h2>
 
             <button type="button"
                     class="close-task-modal"
@@ -474,13 +448,13 @@ button:hover, .button:hover {
         </div>
 
         <form method="POST"
-              action="{{ url_for('add_task_to_intern', user_id=intern[0]) }}"
+              action="{{ url_for('add_task_to_intern', user_id=intern[0], 'current_task_status') }}"
               onsubmit="return validateTask()">
 
             <textarea
                 id="taskInput"
                 name="task"
-                placeholder="Enter task..."
+                placeholder="Enter information..."
                 required
                 maxlength="14000"
             ></textarea>
@@ -490,7 +464,7 @@ button:hover, .button:hover {
             </div>
 
             <button type="submit" class="submit-task-btn">
-                ADD TASK
+                Update
             </button>
 
         </form>
@@ -499,64 +473,155 @@ button:hover, .button:hover {
 
 </div>
 
-
+<!-- Next -->
 <h3 class="task-title">
-    TASK LOG:
+    What are you doing next:
 </h3>
 
+<button type="button" class="add-task-btn" onclick="openTaskModal()">
+    Add Update on What's Next
+</button>
 
+<div id="taskModal" class="task-modal">
 
-{% for status, task_list in tasks.items() %}
+    <div class="task-modal-content">
 
-<h2>
-    {{ status|upper }}
-    ({{ task_list|length }})
-</h2>
+        <div class="task-modal-header">
+            <h2>What's Next</h2>
 
-
-{% for task in task_list %}
-
-<div class="task">
-
-    <div>
-
-        <div class="task-name">
-            {{ task[1] }}
+            <button type="button"
+                    class="close-task-modal"
+                    onclick="closeTaskModal()">
+                ×
+            </button>
         </div>
 
+        <form method="POST"
+              action="{{ url_for('add_task_to_intern', user_id=intern[0], 'current_task_status') }}"
+              onsubmit="return validateTask()">
 
-        <div class="date">
+            <textarea
+                id="taskInput"
+                name="task"
+                placeholder="Enter information..."
+                required
+                maxlength="14000"
+            ></textarea>
 
-            {% if task[4] %}
-                Updated {{ task[4] }}
-            {% else %}
-                Uploaded {{ task[3] }}
-            {% endif %}
+            <div class="task-word-count">
+                <span id="wordCount">0</span> / 2000 words
+            </div>
 
-        </div>
+            <button type="submit" class="submit-task-btn">
+                Update
+            </button>
 
-    </div>
+        </form>
 
-    <div>
-    <form method="POST"
-        action="{{ url_for('delete_task', task_id=task[0]) }}"
-        style="display:inline;">
-
-        <button type="submit"
-                onclick="return confirm('Are you certain?');">
-            REMOVE
-        </button>
-
-    </form>
     </div>
 
 </div>
 
-{% endfor %}
-
-{% endfor %}
+<!-- Need New task? -->
 
 
+<!-- Questions -->
+<h3 class="task-title">
+    Are there any questions/issues/bottlenecks that we can help with?:
+</h3>
+
+<button type="button" class="add-task-btn" onclick="openTaskModal()">
+    Add Question/Request
+</button>
+
+<div id="taskModal" class="task-modal">
+
+    <div class="task-modal-content">
+
+        <div class="task-modal-header">
+            <h2>What's Next</h2>
+
+            <button type="button"
+                    class="close-task-modal"
+                    onclick="closeTaskModal()">
+                ×
+            </button>
+        </div>
+
+        <form method="POST"
+              action="{{ url_for('add_task_to_intern', user_id=intern[0], 'current_task_status') }}"
+              onsubmit="return validateTask()">
+
+            <textarea
+                id="taskInput"
+                name="task"
+                placeholder="Enter information..."
+                required
+                maxlength="14000"
+            ></textarea>
+
+            <div class="task-word-count">
+                <span id="wordCount">0</span> / 2000 words
+            </div>
+
+            <button type="submit" class="submit-task-btn">
+                Update
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- Feedback -->
+<h3 class="task-title">
+    Feedback:
+</h3>
+
+<button type="button" class="add-task-btn" onclick="openTaskModal()">
+    Add Comment:
+</button>
+
+<div id="taskModal" class="task-modal">
+
+    <div class="task-modal-content">
+
+        <div class="task-modal-header">
+            <h2>Feedback</h2>
+
+            <button type="button"
+                    class="close-task-modal"
+                    onclick="closeTaskModal()">
+                ×
+            </button>
+        </div>
+
+        <form method="POST"
+              action="{{ url_for('add_task_to_intern', user_id=intern[0], 'current_task_status') }}"
+              onsubmit="return validateTask()">
+
+            <textarea
+                id="taskInput"
+                name="task"
+                placeholder="Enter feedback..."
+                required
+                maxlength="14000"
+            ></textarea>
+
+            <div class="task-word-count">
+                <span id="wordCount">0</span> / 2000 words
+            </div>
+
+            <button type="submit" class="submit-task-btn">
+                Send
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
 
 <script>
 function openTaskModal() {
