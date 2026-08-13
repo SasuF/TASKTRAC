@@ -34,7 +34,7 @@ def create_tables():
         )
     """)
     
-    # TASKS table
+    # Tasks table
     cur.execute("""
         CREATE TABLE IF NOT EXISTS tasks(
         id SERIAL PRIMARY KEY,
@@ -49,6 +49,7 @@ def create_tables():
         )
     """)
 
+        #Below table exists, but is not in use- has been concatonated to tasks table
     cur.execute("""
         CREATE TABLE IF NOT EXISTS feedback(
         id SERIAL PRIMARY KEY,
@@ -116,7 +117,7 @@ def create_user(first_name, last_name, email, plain_password, role, actual_role)
 
         return False
 
-def add_task(user_id, task, status='planning'):
+def add_task(user_id, task, status='next'):
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("""
@@ -129,18 +130,33 @@ def add_task(user_id, task, status='planning'):
     conn.close()
     print(f"task added for user {user_id}: {task}")
 
-def add_feedback(task_id, admin_id, comment):
+def add_feedback(user_id, task, status='feedback'):
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("""
-        INSERT INTO feedback(task_id, admin_id, comment)
+        INSERT INTO tasks(user_id, task, status)
         VALUES (%s, %s, %s)
-    """, (task_id, admin_id, comment))
+    """, (user_id, task, status))
     
     conn.commit()
 
     conn.close()
-    print(f"feedback added to task{task_id}")
+    print(f"task added for user {user_id}: {task}")
+
+
+# Below method is for an out of date database
+#def add_feedback(task_id, admin_id, comment):
+#    conn = get_connection()
+#    cur = conn.cursor()
+#    cur.execute("""
+#        INSERT INTO feedback(task_id, admin_id, comment)
+#        VALUES (%s, %s, %s)
+#    """, (task_id, admin_id, comment))
+#    
+#    conn.commit()
+#
+#    conn.close()
+#    print(f"feedback added to task{task_id}")
 
 def show_all():
     conn = get_connection()
