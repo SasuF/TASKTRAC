@@ -133,11 +133,13 @@ def add_task(user_id, task, status='next'):
 def set_needs_new_task(user_id):
     conn = get_connection()
     cur = conn.cursor()
-    needs = cur.execute("""
+    cur.execute("""
             SELECT needs_new_task
             FROM users
             WHERE id = %s
-            """, (user_id))
+            """, (user_id,))
+
+    needs = cur.fetchone()[0]
 
     if needs == True:
         needs = False
