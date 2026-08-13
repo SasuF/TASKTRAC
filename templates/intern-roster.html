@@ -209,7 +209,12 @@ button, .button {
 
     {% for intern in interns %}
 
-    <div class="intern-card"
+    <div 
+    {% if intern[7] is sameas true %} 
+    class="intern-card warning" 
+    {% else %}
+    class="intern-card" 
+    {% endif %}
      data-url="{{ url_for('admin_view_profile', user_id=intern[0]) }}"
      data-search="
      {{ intern[1] }}
