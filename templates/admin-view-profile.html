@@ -465,12 +465,34 @@ button:hover, .button:hover {
     Add Update on What's Next
 </button>
 
+{% for task in tasks["next"] %}
+
+<div class="task">
+
+    <div>
+        <div class="task-name">
+            {{ task[1] }}
+        </div>
+
+        <div class="date">
+            {{ task[3] }}
+        </div>
+    </div>
+
+</div>
+
+{% endfor %}
 
 <!-- Need New Task? -->
 <h3 class="task-title">
     Need New Task?:
 </h3>
 
+    {% if intern[7] is sameas true %}
+    Yes
+    {% else %}
+    No
+    {% endif %}
 
 <!-- Questions -->
 <h3 class="task-title">
@@ -483,6 +505,23 @@ button:hover, .button:hover {
     Add Question/Request
 </button>
 
+{% for task in tasks["question/request"] %}
+
+<div class="task">
+
+    <div>
+        <div class="task-name">
+            {{ task[1] }}
+        </div>
+
+        <div class="date">
+            {{ task[3] }}
+        </div>
+    </div>
+
+</div>
+
+{% endfor %}
 
 <!-- Feedback -->
 <h3 class="task-title">
@@ -495,6 +534,23 @@ button:hover, .button:hover {
     Add Comment
 </button>
 
+{% for task in tasks["feedback"] %}
+
+<div class="task">
+
+    <div>
+        <div class="task-name">
+            {{ task[1] }}
+        </div>
+
+        <div class="date">
+            {{ task[3] }}
+        </div>
+    </div>
+
+</div>
+
+{% endfor %}
 
 <!-- ONE MODAL -->
 <div id="taskModal" class="task-modal">
