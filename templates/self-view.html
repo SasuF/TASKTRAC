@@ -5,7 +5,6 @@
 <title>Intern Profile</title>
 
 <style>
-
 body {
     background:#101514;
     color:white;
@@ -73,6 +72,13 @@ button, .button {
 }
 
 
+/* Darken buttons when hovering */
+
+button:hover, .button:hover {
+    background:#111;
+}
+
+
 .warning {
     border-color:#e2b84b;
     color:#e2b84b;
@@ -90,7 +96,6 @@ button, .button {
     color:#aaa;
     letter-spacing:2px;
 }
-
 
 
 .task {
@@ -112,7 +117,6 @@ button, .button {
 }
 
 
-
 .task-name {
     font-size:18px;
 }
@@ -124,45 +128,29 @@ button, .button {
 }
 
 
+/* Status dropdown */
 
 .status {
+    background:#1c2422;
+    border:1px solid #555;
+    color:white;
 
-    padding:8px 15px;
+    padding:10px 20px;
 
     border-radius:5px;
 
+    cursor:pointer;
+
     text-transform:uppercase;
-
 }
 
 
+/* Darken status dropdown when hovering */
 
-.planning {
-    color:#9bb9ff;
-    border:1px solid #9bb9ff;
+.status:hover {
+    background:#111;
 }
 
-
-.start {
-    color:#9bb9ff;
-    border:1px solid #9bb9ff;
-}
-
-
-.in-progress {
-
-    color:#e2b84b;
-    border:1px solid #e2b84b;
-
-}
-
-
-.completed {
-
-    color:#8dc98a;
-    border:1px solid #8dc98a;
-
-}
 
 .add-task {
 
@@ -211,20 +199,6 @@ button, .button {
     cursor:pointer;
 
 }
-
-.status {
-    padding:8px 15px;
-    border-radius:5px;
-    background:#202826;
-    cursor:pointer;
-    text-transform:uppercase;
-}
-
-
-.status option {
-    color:black;
-}
-
 
 </style>
 
@@ -375,9 +349,9 @@ button, .button {
           action="{{ url_for('update_status', task_id=task[0]) }}">
 
         <select 
-    class="status {{ task[2].replace(' ', '-') }}"
-    name="status"
-    onchange="this.form.submit()">
+        class="status"
+        name="status"
+        onchange="this.form.submit()">
 
             <option value="next"
             {% if task[2] == "next" %}selected{% endif %}>
