@@ -425,13 +425,15 @@ button:hover, .button:hover {
 
 
 <!-- Current -->
-<button type="button"
-        class="add-task-btn"
-        onclick="openTaskModal('currentTaskModal')">
+<h3 class="task-title">
+    What is your current task/what is the status:
+</h3>
+
+<button type="button" class="add-task-btn" onclick="openTaskModal()">
     Add Current Task/Status
 </button>
 
-<div id="currentTaskModal" class="task-modal">
+<div id="taskModal" class="task-modal">
 
     <div class="task-modal-content">
 
@@ -440,7 +442,7 @@ button:hover, .button:hover {
 
             <button type="button"
                     class="close-task-modal"
-                    onclick="closeTaskModal('currentTaskModal')">
+                    onclick="closeTaskModal()">
                 ×
             </button>
         </div>
@@ -450,11 +452,11 @@ button:hover, .button:hover {
               onsubmit="return validateTask()">
 
             <input type="hidden"
-                   name="status"
-                   value="current">
+            name="status"
+            value="current">
 
             <textarea
-                id="currentTaskInput"
+                id="taskInput"
                 name="task"
                 placeholder="Enter information..."
                 required
@@ -462,7 +464,7 @@ button:hover, .button:hover {
             ></textarea>
 
             <div class="task-word-count">
-                <span id="currentWordCount">0</span> / 2000 words
+                <span id="wordCount">0</span> / 2000 words
             </div>
 
             <button type="submit" class="submit-task-btn">
@@ -476,13 +478,15 @@ button:hover, .button:hover {
 </div>
 
 <!-- Next -->
-<button type="button"
-        class="add-task-btn"
-        onclick="openTaskModal('nextTaskModal')">
+<h3 class="task-title">
+    What are you doing next:
+</h3>
+
+<button type="button" class="add-task-btn" onclick="openTaskModal()">
     Add Update on What's Next
 </button>
 
-<div id="nextTaskModal" class="task-modal">
+<div id="taskModal" class="task-modal">
 
     <div class="task-modal-content">
 
@@ -491,7 +495,7 @@ button:hover, .button:hover {
 
             <button type="button"
                     class="close-task-modal"
-                    onclick="closeTaskModal('nextTaskModal')">
+                    onclick="closeTaskModal()">
                 ×
             </button>
         </div>
@@ -501,11 +505,11 @@ button:hover, .button:hover {
               onsubmit="return validateTask()">
 
             <input type="hidden"
-                   name="status"
-                   value="next">
+            name="status"
+            value="next">
 
             <textarea
-                id="nextTaskInput"
+                id="taskInput"
                 name="task"
                 placeholder="Enter information..."
                 required
@@ -513,7 +517,7 @@ button:hover, .button:hover {
             ></textarea>
 
             <div class="task-word-count">
-                <span id="nextWordCount">0</span> / 2000 words
+                <span id="wordCount">0</span> / 2000 words
             </div>
 
             <button type="submit" class="submit-task-btn">
@@ -536,9 +540,7 @@ button:hover, .button:hover {
     Are there any questions/issues/bottlenecks that we can help with?:
 </h3>
 
-<button type="button"
-        class="add-task-btn"
-        onclick="openTaskModal('nextTaskModal')">
+<button type="button" class="add-task-btn" onclick="openTaskModal()">
     Add Question/Request
 </button>
 
@@ -591,9 +593,7 @@ button:hover, .button:hover {
     Feedback:
 </h3>
 
-<button type="button"
-        class="add-task-btn"
-        onclick="openTaskModal('nextTaskModal')">
+<button type="button" class="add-task-btn" onclick="openTaskModal()">
     Add Comment:
 </button>
 
@@ -647,7 +647,6 @@ function openTaskModal(modalId) {
 
     modal.style.display = "flex";
 }
-
 
 function closeTaskModal(modalId) {
     const modal = document.getElementById(modalId);
