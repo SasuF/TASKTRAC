@@ -403,24 +403,15 @@ button:hover, .button:hover {
         </div>
 
     </div>
-
-
 </div>
 
 <div class="buttons">
-
-    {% if tasks|length < 2 %}
-    <span class="button warning">
-        NEEDS MORE TASKS
-    </span>
-    {% endif %}
 
     {% if intern[5] %}
     <a class="button" href="/{{ intern[5] }}">
         VIEW CV
     </a>
     {% endif %}
-
 
 </div>
 
@@ -429,12 +420,6 @@ button:hover, .button:hover {
 <h3 class="task-title">
     What is your current task/what is the status:
 </h3>
-
-<button type="button"
-        class="add-task-btn"
-        onclick="openTaskModal('current', 'Current Task/Status', 'Enter information...', 'Update')">
-    Add Current Task/Status
-</button>
 
 {% for task in tasks["current"] %}
 
@@ -458,12 +443,6 @@ button:hover, .button:hover {
 <h3 class="task-title">
     What are you doing next:
 </h3>
-
-<button type="button"
-        class="add-task-btn"
-        onclick="openTaskModal('next', 'What Comes Next', 'Enter information...', 'Update')">
-    Add Update on What's Next
-</button>
 
 {% for task in tasks["next"] %}
 
@@ -498,12 +477,6 @@ button:hover, .button:hover {
 <h3 class="task-title">
     Are there any questions/issues/bottlenecks that we can help with?:
 </h3>
-
-<button type="button"
-        class="add-task-btn"
-        onclick="openTaskModal('question/request', 'Question / Request', 'Enter information...', 'Send')">
-    Add Question/Request
-</button>
 
 {% for task in tasks["question/request"] %}
 
@@ -606,7 +579,6 @@ button:hover, .button:hover {
 
 
 <script>
-
 function openTaskModal(status, title, placeholder, buttonText) {
 
     const modal = document.getElementById("taskModal");

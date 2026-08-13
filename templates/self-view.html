@@ -258,7 +258,71 @@ button:hover, .button:hover {
         VIEW CV
     </a>
     {% endif %}
-  
+
+</div>
+
+<!-- Current -->
+<h3 class="task-title">
+    What is your current task/what is the status:
+</h3>
+
+<button type="button"
+        class="add-task-btn"
+        onclick="openTaskModal('current', 'Current Task/Status', 'Enter information...', 'Update')">
+    Add Current Task/Status
+</button>
+
+{% for task in tasks["current"] %}
+
+<div class="task">
+
+    <div>
+        <div class="task-name">
+            {{ task[1] }}
+        </div>
+
+        <div class="date">
+            {{ task[3] }}
+        </div>
+    </div>
+
+</div>
+
+{% endfor %}
+
+<!-- Next -->
+<h3 class="task-title">
+    What are you doing next:
+</h3>
+
+<button type="button"
+        class="add-task-btn"
+        onclick="openTaskModal('next', 'What Comes Next', 'Enter information...', 'Update')">
+    Add Update on What's Next
+</button>
+
+{% for task in tasks["next"] %}
+
+<div class="task">
+
+    <div>
+        <div class="task-name">
+            {{ task[1] }}
+        </div>
+
+        <div class="date">
+            {{ task[3] }}
+        </div>
+    </div>
+
+</div>
+
+{% endfor %}
+
+<!-- Need New Task? -->
+<h3 class="task-title">
+    Need New Task?:
+</h3>
     <form method="POST"
           action="{{ url_for('request_task', user_id=intern[0]) }}"
           style="display:inline;">
@@ -271,122 +335,223 @@ button:hover, .button:hover {
         </button>
     </form>
 
-</div>
+    {% if intern[7] is sameas true %}
+    Yes
+    {% else %}
+    No
+    {% endif %}
 
-
-<div class="add-task">
-
-    <h3>
-        ADD TASK
-    </h3>
-
-
-    <form method="POST"
-          action="{{ url_for('add_task_to_intern', user_id=intern[0]) }}">
-
-        <input
-            type="text"
-            name="task"
-            placeholder="Enter task..."
-            required
-        >
-
-
-        <button type="submit">
-            ADD TASK
-        </button>
-
-    </form>
-
-</div>
-
-
+<!-- Questions -->
 <h3 class="task-title">
-    TASK LOG:
+    Are there any questions/issues/bottlenecks that we can help with?:
 </h3>
 
+<button type="button"
+        class="add-task-btn"
+        onclick="openTaskModal('question/request', 'Question / Request', 'Enter information...', 'Send')">
+    Add Question/Request
+</button>
 
-
-{% for status, task_list in tasks.items() %}
-
-<h2>
-    {{ status|upper }}
-    ({{ task_list|length }})
-</h2>
-
-
-{% for task in task_list %}
+{% for task in tasks["question/request"] %}
 
 <div class="task">
 
     <div>
-
         <div class="task-name">
             {{ task[1] }}
         </div>
 
-
         <div class="date">
-
-            {% if task[4] %}
-                Updated {{ task[4] }}
-            {% else %}
-                Uploaded {{ task[3] }}
-            {% endif %}
-
+            {{ task[3] }}
         </div>
-
-    </div>
-
-    <div>
-    <form method="POST"
-        action="{{ url_for('delete_task', task_id=task[0]) }}"
-        style="display:inline;">
-
-        <button type="submit"
-                onclick="return confirm('Are you certain?');">
-            REMOVE
-        </button>
-
-    </form>
-
-    {% if status != "feedback" %}
-    <form method="POST"
-          action="{{ url_for('update_status', task_id=task[0]) }}">
-
-        <select 
-        class="status"
-        name="status"
-        onchange="this.form.submit()">
-
-            <option value="next"
-            {% if task[2] == "next" %}selected{% endif %}>
-                NEXT
-            </option>
-
-            <option value="current"
-            {% if task[2] == "current" %}selected{% endif %}>
-                CURRENT
-            </option>
-
-            <option value="completed"
-            {% if task[2] == "completed" %}selected{% endif %}>
-                COMPLETED
-            </option>
-
-        </select>
-
-    </form>
-    {% endif %}
     </div>
 
 </div>
 
 {% endfor %}
 
+<!-- Feedback -->
+<h3 class="task-title">
+    Feedback:
+</h3>
+
+{% for task in tasks["feedback"] %}
+
+<div class="task">
+
+    <div>
+        <div class="task-name">
+            {{ task[1] }}
+        </div>
+
+        <div class="date">
+            {{ task[3] }}
+        </div>
+    </div>
+
+</div>
+
 {% endfor %}
 
+<!-- ONE MODAL -->
+<div id="taskModal" class="task-modal">
 
+    <div class="task-modal-content">
+
+        <div class="task-modal-header">
+
+            <h2 id="taskModalTitle">
+                Current Task/Status
+            </h2>
+
+            <button type="button"
+                    class="close-task-modal"
+                    onclick="closeTaskModal()">
+                ×
+            </button>
+
+        </div>
+
+        <form method="POST"
+              action="{{ url_for('add_task_to_intern', user_id=intern[0]) }}"
+              onsubmit="return validateTask()">
+
+            <input type="hidden"
+                   id="taskStatus"
+                   name="status"
+                   value="current">
+
+            <textarea
+                id="taskInput"
+                name="task"
+                placeholder="Enter information..."
+                required
+                maxlength="14000"
+            ></textarea>
+
+            <div class="task-word-count">
+                <span id="wordCount">0</span> / 2000 words
+            </div>
+
+            <button type="submit"
+                    id="submitTaskButton"
+                    class="submit-task-btn">
+                Update
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<script>
+function openTaskModal(status, title, placeholder, buttonText) {
+
+    const modal = document.getElementById("taskModal");
+    const statusInput = document.getElementById("taskStatus");
+    const taskInput = document.getElementById("taskInput");
+    const titleElement = document.getElementById("taskModalTitle");
+    const submitButton = document.getElementById("submitTaskButton");
+
+    // Set the status that will be sent to Flask
+    statusInput.value = status;
+
+    // Change modal text
+    titleElement.textContent = title;
+    taskInput.placeholder = placeholder;
+    submitButton.textContent = buttonText;
+
+    // Clear previous text
+    taskInput.value = "";
+
+    // Reset word counter
+    document.getElementById("wordCount").textContent = "0";
+
+    // Show modal
+    modal.style.display = "flex";
+
+    // Focus textarea
+    taskInput.focus();
+}
+
+
+function closeTaskModal() {
+
+    document.getElementById("taskModal").style.display = "none";
+
+}
+
+
+/* Word counter */
+
+const taskInput = document.getElementById("taskInput");
+const wordCount = document.getElementById("wordCount");
+
+taskInput.addEventListener("input", function () {
+
+    let words = this.value.trim().split(/\s+/);
+
+    if (this.value.trim() === "") {
+        words = [];
+    }
+
+    if (words.length > 2000) {
+
+        this.value = words
+            .slice(0, 2000)
+            .join(" ");
+
+        words = this.value.trim().split(/\s+/);
+    }
+
+    wordCount.textContent = words.length;
+});
+
+
+/* Final validation */
+
+function validateTask() {
+
+    const text = taskInput.value.trim();
+
+    const words = text === ""
+        ? []
+        : text.split(/\s+/);
+
+    if (words.length > 2000) {
+
+        alert("Tasks are limited to 2,000 words.");
+
+        return false;
+    }
+
+    return true;
+}
+
+
+/* Close when clicking outside modal */
+
+document.getElementById("taskModal").addEventListener("click", function(event) {
+
+    if (event.target === this) {
+        closeTaskModal();
+    }
+
+});
+
+
+/* Close with ESC */
+
+document.addEventListener("keydown", function(event) {
+
+    if (event.key === "Escape") {
+        closeTaskModal();
+    }
+
+});
+
+</script>
 
 
 </body>
