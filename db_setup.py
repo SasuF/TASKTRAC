@@ -137,7 +137,7 @@ def set_needs_new_task(user_id):
             SELECT needs_new_task
             FROM users
             WHERE id = %s
-            """)
+            """, (user_id))
 
     if needs == True:
         needs = False
