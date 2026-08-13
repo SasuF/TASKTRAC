@@ -365,6 +365,11 @@ button:hover, .button:hover {
 
 <body>
 
+<!-- variable for later -->
+<input type="hidden"
+name="status"
+value="current">
+
 <div class="header">
 
     <h3>ADMIN VIEW</h3>
@@ -429,13 +434,11 @@ button:hover, .button:hover {
     What is your current task/what is the status:
 </h3>
 
-<button type="button"
-        class="add-task-btn"
-        onclick="openTaskModal('currentTaskModal')">
+<button type="button" class="add-task-btn" onclick="openTaskModal('current')">
     Add Current Task/Status
 </button>
 
-<div id="currentTaskModal" class="task-modal">
+<div id="taskModal" class="task-modal">
 
     <div class="task-modal-content">
 
@@ -444,7 +447,7 @@ button:hover, .button:hover {
 
             <button type="button"
                     class="close-task-modal"
-                    onclick="closeTaskModal('currentTaskModal')">
+                    onclick="closeTaskModal()">
                 ×
             </button>
         </div>
@@ -453,12 +456,8 @@ button:hover, .button:hover {
               action="{{ url_for('add_task_to_intern', user_id=intern[0]) }}"
               onsubmit="return validateTask()">
 
-            <input type="hidden"
-                   name="status"
-                   value="current">
-
             <textarea
-                id="currentTaskInput"
+                id="taskInput"
                 name="task"
                 placeholder="Enter information..."
                 required
@@ -466,7 +465,7 @@ button:hover, .button:hover {
             ></textarea>
 
             <div class="task-word-count">
-                <span id="currentWordCount">0</span> / 2000 words
+                <span id="wordCount">0</span> / 2000 words
             </div>
 
             <button type="submit" class="submit-task-btn">
@@ -474,75 +473,18 @@ button:hover, .button:hover {
             </button>
 
         </form>
-    </div>
-</div>
 
+    </div>
+
+</div>
 
 <!-- Next -->
 <h3 class="task-title">
     What are you doing next:
 </h3>
 
-<button type="button"
-        class="add-task-btn"
-        onclick="openTaskModal('nextTaskModal')">
+<button type="button" class="add-task-btn" onclick="openTaskModal('next')">
     Add Update on What's Next
-</button>
-
-<div id="nextTaskModal" class="task-modal">
-
-    <div class="task-modal-content">
-
-        <div class="task-modal-header">
-            <h2>What's Next</h2>
-
-            <button type="button"
-                    class="close-task-modal"
-                    onclick="closeTaskModal('nextTaskModal')">
-                ×
-            </button>
-        </div>
-
-        <form method="POST"
-              action="{{ url_for('add_task_to_intern', user_id=intern[0]) }}"
-              onsubmit="return validateTask()">
-
-            <input type="hidden"
-                   name="status"
-                   value="next">
-
-            <textarea
-                id="nextTaskInput"
-                name="task"
-                placeholder="Enter information..."
-                required
-                maxlength="14000"
-            ></textarea>
-
-            <div class="task-word-count">
-                <span id="nextWordCount">0</span> / 2000 words
-            </div>
-
-            <button type="submit" class="submit-task-btn">
-                Update
-            </button>
-
-        </form>
-    </div>
-</div>
-
-<!-- Need New task? -->
-<h3 class="task-title">
-    Need New Task?:
-</h3>
-
-<!-- Questions -->
-<h3 class="task-title">
-    Are there any questions/issues/bottlenecks that we can help with?:
-</h3>
-
-<button type="button" class="add-task-btn" onclick="openTaskModal()">
-    Add Question/Request
 </button>
 
 <div id="taskModal" class="task-modal">
@@ -563,9 +505,59 @@ button:hover, .button:hover {
               action="{{ url_for('add_task_to_intern', user_id=intern[0]) }}"
               onsubmit="return validateTask()">
 
-            <input type="hidden"
-            name="status"
-            value="question/request">
+            <textarea
+                id="taskInput"
+                name="task"
+                placeholder="Enter information..."
+                required
+                maxlength="14000"
+            ></textarea>
+
+            <div class="task-word-count">
+                <span id="wordCount">0</span> / 2000 words
+            </div>
+
+            <button type="submit" class="submit-task-btn">
+                Update
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+<!-- Need New task? -->
+<h3 class="task-title">
+    Need New Task?:
+</h3>
+
+<!-- Questions -->
+<h3 class="task-title">
+    Are there any questions/issues/bottlenecks that we can help with?:
+</h3>
+
+<button type="button" class="add-task-btn" onclick="openTaskModal('question/request')">
+    Add Question/Request
+</button>
+
+<div id="taskModal" class="task-modal">
+
+    <div class="task-modal-content">
+
+        <div class="task-modal-header">
+            <h2>What's Next</h2>
+
+            <button type="button"
+                    class="close-task-modal"
+                    onclick="closeTaskModal()">
+                ×
+            </button>
+        </div>
+
+        <form method="POST"
+              action="{{ url_for('add_task_to_intern', user_id=intern[0]) }}"
+              onsubmit="return validateTask()">
 
             <textarea
                 id="taskInput"
@@ -594,7 +586,7 @@ button:hover, .button:hover {
     Feedback:
 </h3>
 
-<button type="button" class="add-task-btn" onclick="openTaskModal()">
+<button type="button" class="add-task-btn" onclick="openTaskModal('feedback')">
     Add Comment:
 </button>
 
@@ -615,10 +607,6 @@ button:hover, .button:hover {
         <form method="POST"
               action="{{ url_for('add_task_to_intern', user_id=intern[0]) }}"
               onsubmit="return validateTask()">
-
-            <input type="hidden"
-            name="status"
-            value="feedback">
 
             <textarea
                 id="taskInput"
@@ -643,17 +631,21 @@ button:hover, .button:hover {
 </div>
 
 <script>
-function openTaskModal(modalId) {
-    const modal = document.getElementById(modalId);
+function openTaskModal(status) {
+    const modal = document.getElementById("taskModal");
+
+    document.getElementById("taskStatus").value = status;
 
     modal.style.display = "flex";
+
+    document.getElementById("taskInput").focus();
 }
 
-function closeTaskModal(modalId) {
-    const modal = document.getElementById(modalId);
 
-    modal.style.display = "none";
+function closeTaskModal() {
+    document.getElementById("taskModal").style.display = "none";
 }
+
 
 const taskInput = document.getElementById("taskInput");
 const wordCount = document.getElementById("wordCount");
