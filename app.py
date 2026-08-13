@@ -200,7 +200,7 @@ def admin_view_profile(user_id):
     if session.get("role") != "admin":
         return "Access denied", 403
 
-    intern, tasks = get_intern_profile(user_id)
+    intern, recent_tasks, old_tasks = get_intern_profile(user_id)
 
     if intern is None:
         return "Intern not found", 404
@@ -208,7 +208,8 @@ def admin_view_profile(user_id):
     return render_template(
         "admin-view-profile.html",
         intern=intern,
-        tasks=tasks
+        tasks=recent_tasks,
+        old_tasks=old_tasks 
     )
 #end of page routes
 
