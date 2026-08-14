@@ -1,4 +1,5 @@
 import os
+import secrets as secrets_lib
 import psycopg2
 import bcrypt
 from flask import Flask, render_template
@@ -281,6 +282,70 @@ def update_intern_info(user_id, first_name, last_name, email, actual_role):
         if conn:
             conn.close()
         return False
+
+def add_invite_columns():
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("ALTER TABLE users ALTER COLUMN password_hash DROP NOT NULL")
+    cur.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS invite_token TEXT UNIQUE")
+    cur.execute("ALTER TABLE users ADD COLUMN IF NOT EXISTS invite_expires TIMESTAMP")
+    conn.commit()
+    conn.close()
+    print("invite columns ensured")
+
+def create_intern_invite(first_name, last_name, email, actual_role):
+    conn = None
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+        token = secrets_lib.token_urlsafe(32)
+        expires = datetime.now() + timedelta(days=7)
+        cur.execute("""
+            INSERT INTO users(
+                first_name, last_name, email, password_hash,
+                role, actual_role, needs_new_task, invite_token, invite_expires
+            )
+            VALUES (%s, %s, %s, NULL, 'intern', %s, %s, %s, %s)
+        """, (first_name, last_name, email, actual_role, False, token, expires))
+        conn.commit()
+        conn.close()
+        return token
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print("DATABASE ERROR:", repr(e))
+        if conn:
+            conn.close()
+        return None
+
+def get_user_by_invite_token(token):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        SELECT id, first_name, email, invite_expires
+        FROM users
+        WHERE invite_token = %s
+    """, (token,))
+    row = cur.fetchone()
+    conn.close()
+    if row is None:
+        return None
+    return {"id": row[0], "first_name": row[1], "email": row[2], "invite_expires": row[3]}
+
+def set_password_with_token(token, plain_password):
+    user = get_user_by_invite_token(token)
+    if user is None or user["invite_expires"] < datetime.now():
+        return False
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        UPDATE users
+        SET password_hash = %s, invite_token = NULL, invite_expires = NULL
+        WHERE id = %s
+    """, (hash_password(plain_password), user["id"]))
+    conn.commit()
+    conn.close()
+    return True
 
 def update_user_path(user_id, headshot_path=None, cv_path=None):
     conn = get_connection()

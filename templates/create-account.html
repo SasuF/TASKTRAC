@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Intern Account</title>
+    <title>Invite Intern</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
@@ -14,15 +14,15 @@
 
     <div class="create-card">
 
-        <a href="/logout" class="back-link">← Back</a>
+        <a href="{{ url_for('intern_roster') }}" class="back-link">← Back</a>
 
-        <h1>NEW INTERN ACCOUNT</h1>
+        <h1>INVITE NEW INTERN</h1>
 
         <p class="subtitle">
-            Create your profile so employers can find and review your information.
+            They'll receive an email with a link to set their own password.
         </p>
 
-        <form action="/create-account" method="POST" enctype="multipart/form-data">
+        <form action="/create-account" method="POST">
 
             <label for="firstname">First Name</label>
             <input
@@ -58,7 +58,7 @@
             id="actual_role"
             required>
 
-            <option value="" disabled selected>Select your role</option>
+            <option value="" disabled selected>Select role</option>
             <option value="Tech">Tech</option>
             <option value="Operations">Operations</option>
             <option value="Finance">Finance</option>
@@ -66,58 +66,8 @@
 
             </select>
 
-            <label for="password">Password</label>
-            <input
-                type="password"
-                name="password"
-                id="password"
-                required
-            >
-
-            <label>Headshot</label>
-
-            <div class="upload-area">
-
-                <label class="upload-button">
-
-                    Upload Photo
-
-                    <input
-                        type="file"
-                        name="headshot"
-                        id="headshot"
-                        accept="image/*"
-                        hidden
-                    >
-
-                </label>
-
-                <p id="headshot-name"></p>
-
-            </div>
-
-
-            <label>CV / Resume</label>
-
-            <label class="upload-button full">
-
-                Upload Resume
-
-                <input
-                    type="file"
-                    name="resume"
-                    id="resume"
-                    accept=".pdf,.doc,.docx"
-                    hidden
-                >
-
-            </label>
-
-            <p id="resume-name"></p>
-
-
             <button class="login-btn" type="submit">
-                Create Account
+                Send Invite
             </button>
 
         </form>
@@ -125,29 +75,6 @@
     </div>
 
 </div>
-
-
-<script src="{{ url_for('static', filename='script.js') }}"></script>
-
-<script>
-    const headshotInput = document.getElementById("headshot");
-    const resumeInput = document.getElementById("resume");
-
-    const headshotName = document.getElementById("headshot-name");
-    const resumeName = document.getElementById("resume-name");
-
-    headshotInput.addEventListener("change", function () {
-        headshotName.textContent = this.files[0]
-            ? this.files[0].name
-            : "";
-    });
-
-    resumeInput.addEventListener("change", function () {
-        resumeName.textContent = this.files[0]
-            ? this.files[0].name
-            : "";
-    });
-</script>
 
 
 <style>

@@ -3,9 +3,12 @@ from werkzeug.utils import secure_filename
 import secrets
 from db_setup import (create_user, get_all_interns, get_intern_profile, remove_task, log_in,
 get_all_interns, get_intern_profile, add_feedback, add_task, update_task_status,
-set_needs_new_task, get_interns_needing_tasks, update_user_path,update_intern_info)
+set_needs_new_task, get_interns_needing_tasks, update_user_path, update_intern_info,
+create_intern_invite, get_user_by_invite_token, set_password_with_token)
+from email_utils import send_invite_email
 import sys
 import os
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -40,6 +43,33 @@ def login():
 
     return render_template("login.html")
 
+
+@app.route("/set-password/<token>", methods=["GET", "POST"])
+def set_password(token):
+    user = get_user_by_invite_token(token)
+
+    if user is None:
+        return "Invalid or expired invite link.", 404
+
+    if user["invite_expires"] < datetime.now():
+        return "This invite link has expired.", 400
+
+    if request.method == "POST":
+        password = request.form["password"]
+        confirm = request.form["confirm_password"]
+
+        if password != confirm:
+            return "Passwords do not match.", 400
+
+        success = set_password_with_token(token, password)
+
+        if not success:
+            return "This invite link has expired or is invalid.", 400
+
+        return redirect(url_for("login"))
+
+    return render_template("set-password.html", user=user)
+
 @app.route("/dashboard")
 def dashboard():
     if "user_id" not in session:
@@ -67,52 +97,26 @@ def create_account():
     if session.get("role") != "admin":
         return "Access denied", 403
 
-    print(request.method, request.path, file=sys.stderr, flush=True)
     if request.method == "POST":
-        print("Create-Account got called", file=sys.stderr, flush=True)
-
         first_name = request.form["firstname"]
         last_name = request.form["lastname"]
         email = request.form["email"]
-        password = request.form["password"]
         actual_role = request.form["actual_role"]
 
-        headshot = request.files.get("headshot")
-        resume = request.files.get("resume")
+        token = create_intern_invite(first_name, last_name, email, actual_role)
 
-        headshot_path = None
-        cv_path = None
+        if token is None:
+            return "Could not create invite. Email may already exist.", 500
 
-        if headshot and headshot.filename and allowed_file(headshot.filename, ALLOWED_HEADSHOT_EXT):
-            filename = secure_filename(f"{email}_headshot_{headshot.filename}")
-            save_path = os.path.join(UPLOAD_FOLDER, "headshots", filename)
-            headshot.save(save_path)
-            headshot_path = f"{UPLOAD_FOLDER}/headshots/{filename}"
+        invite_link = url_for("set_password", token=token, _external=True)
 
-        if resume and resume.filename and allowed_file(resume.filename, ALLOWED_CV_EXT):
-            filename = secure_filename(f"{email}_CVS_{resume.filename}")
-            save_path = os.path.join(UPLOAD_FOLDER, "CVS", filename)
-            resume.save(save_path)
-            cv_path = f"{UPLOAD_FOLDER}/CVS/{filename}"
+        try:
+            send_invite_email(email, first_name, invite_link)
+        except Exception as e:
+            print("EMAIL ERROR:", repr(e), file=sys.stderr, flush=True)
+            return f"Account created, but the invite email failed to send. Link: {invite_link}", 500
 
-        success = create_user(
-            first_name,
-            last_name,
-            email,
-            password,
-            "intern",
-            actual_role,
-            headshot_path,
-            cv_path
-        )
-
-        if not success:
-            print("Create Account failed", file=sys.stderr, flush=True)
-            return "Account creation failed.", 500
-
-        print("Create Account worked?", file=sys.stderr, flush=True)
-        return redirect(url_for("login"))
-    print("Something went wrong, evidently", file=sys.stderr, flush=True)
+        return f"Invite sent to {email}.", 200
 
     return render_template("create-account.html")
 
