@@ -207,7 +207,7 @@ def get_all_interns():
     cur.execute("""
         SELECT id, first_name, last_name, email, headshot_path, cv_path, actual_role, needs_new_task
         FROM users
-        WHERE role = 'intern'
+        WHERE role = 'intern' AND is_archived = FALSE
     """)
     interns = cur.fetchall()
     conn.close()
@@ -335,3 +335,36 @@ def remove_task(task_id):
     cur.execute("DELETE FROM tasks WHERE id=%s", (task_id,))
     conn.commit()
     conn.close()
+
+def add_archived_column():
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        ALTER TABLE users
+        ADD COLUMN IF NOT EXISTS is_archived BOOL NOT NULL DEFAULT FALSE
+    """)
+    conn.commit()
+    conn.close()
+    print("is_archived column ensured")
+
+def archive_intern(user_id):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        UPDATE users
+        SET is_archived = TRUE
+        WHERE id = %s
+    """, (user_id,))
+    conn.commit()
+    conn.close()
+
+def unarchive_intern(user_id):
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute("""
+        UPDATE users
+        SET is_archived = FALSE
+        WHERE id = %s
+    """, (user_id,))
+    conn.commit()
+    conn.close()    

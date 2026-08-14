@@ -390,9 +390,12 @@ button:hover, .button:hover {
 
 
     <div class="avatar">
+    {% if intern[4] %}
+        <img src="/{{ intern[4] }}" alt="Headshot" style="width:100%; height:100%; object-fit:cover; border-radius:8px;">
+    {% else %}
         {{ intern[1][0] }}
-    </div>
-
+    {% endif %}
+</div>
 
     <div>
 
@@ -577,6 +580,7 @@ button:hover, .button:hover {
 
     {% endfor %}
 {% endfor %}
+
 <!-- ONE MODAL -->
 <div id="taskModal" class="task-modal">
 

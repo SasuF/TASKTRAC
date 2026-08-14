@@ -87,13 +87,13 @@ def create_account():
             filename = secure_filename(f"{email}_headshot_{headshot.filename}")
             save_path = os.path.join(UPLOAD_FOLDER, "headshots", filename)
             headshot.save(save_path)
-            headshot_path = f"/{UPLOAD_FOLDER}/headshots/{filename}"
+            headshot_path = f"{UPLOAD_FOLDER}/headshots/{filename}"
 
         if resume and resume.filename and allowed_file(resume.filename, ALLOWED_CV_EXT):
             filename = secure_filename(f"{email}_CVS_{resume.filename}")
             save_path = os.path.join(UPLOAD_FOLDER, "CVS", filename)
             resume.save(save_path)
-            cv_path = f"/{UPLOAD_FOLDER}/CVS/{filename}"
+            cv_path = f"{UPLOAD_FOLDER}/CVS/{filename}"
 
         success = create_user(
             first_name,
@@ -159,13 +159,13 @@ def upload_files(user_id):
         filename = secure_filename(f"user{user_id}_headshot_{headshot.filename}")
         save_path = os.path.join(UPLOAD_FOLDER, "headshots", filename)
         headshot.save(save_path)
-        headshot_path = f"/{UPLOAD_FOLDER}/headshots/{filename}"
+        headshot_path = f"{UPLOAD_FOLDER}/headshots/{filename}"
 
     if cv and cv.filename and allowed_file(cv.filename, ALLOWED_CV_EXT):
         filename = secure_filename(f"user{user_id}_CVS_{cv.filename}")
         save_path = os.path.join(UPLOAD_FOLDER, "CVS", filename)
         cv.save(save_path)
-        cv_path = f"/{UPLOAD_FOLDER}/CVS/{filename}"
+        cv_path = f"{UPLOAD_FOLDER}/CVS/{filename}"
 
     update_user_path(user_id, headshot_path, cv_path)
 
