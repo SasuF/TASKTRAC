@@ -468,6 +468,36 @@ button:hover, .button:hover {
 
 </div>
 
+<div class="add-task">
+
+    <h3 style="cursor:pointer;" onclick="toggleUploadFiles()">
+        UPLOAD FILES ▾
+    </h3>
+
+    <div id="uploadFilesForm" style="display:none;">
+
+    <form method="POST"
+          action="{{ url_for('upload_files', user_id=intern[0]) }}"
+          enctype="multipart/form-data">
+
+        <label>Headshot (jpg/png):</label>
+        <input type="file" name="headshot" accept=".jpg,.jpeg,.png">
+
+        <br><br>
+
+        <label>CV (pdf/doc/docx):</label>
+        <input type="file" name="cv" accept=".pdf,.doc,.docx">
+
+        <br><br>
+
+        <button type="submit">UPLOAD</button>
+
+    </form>
+
+    </div>
+
+</div>
+
 <!-- Current -->
 <h3 class="task-title">
     What is your current task/what is the status:
@@ -709,6 +739,11 @@ function openTaskModal(status, title, placeholder, buttonText) {
 
 function toggleEditProfile() {
     const form = document.getElementById("editProfileForm");
+    form.style.display = (form.style.display === "none") ? "block" : "none";
+}
+
+function toggleUploadFiles() {
+    const form = document.getElementById("uploadFilesForm");
     form.style.display = (form.style.display === "none") ? "block" : "none";
 }
 
