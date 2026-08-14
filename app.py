@@ -110,13 +110,14 @@ def create_account():
 
         invite_link = url_for("set_password", token=token, _external=True)
 
+        email_status = "sent"
         try:
             send_invite_email(email, first_name, invite_link)
         except Exception as e:
             print("EMAIL ERROR:", repr(e), file=sys.stderr, flush=True)
-            return f"Account created, but the invite email failed to send. Link: {invite_link}", 500
+            email_status = "failed"
 
-        return f"Invite sent to {email}.", 200
+        return f"Invite created for {email}. Email status: {email_status}. Link (send manually if needed): {invite_link}", 200
 
     return render_template("create-account.html")
 
