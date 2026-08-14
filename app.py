@@ -1,15 +1,24 @@
 from flask import Flask, render_template, request, redirect, url_for, session
+from werkzeug.utils import secure_filename
 import secrets
-from db_setup import (create_user, get_all_interns, get_intern_profile, remove_task, log_in, 
-get_all_interns, get_intern_profile, add_feedback, add_task, update_task_status, 
-set_needs_new_task, get_interns_needing_tasks)
+from db_setup import (create_user, get_all_interns, get_intern_profile, remove_task, log_in,
+get_all_interns, get_intern_profile, add_feedback, add_task, update_task_status,
+set_needs_new_task, get_interns_needing_tasks, update_user_path)
 import sys
 import os
 
 app = Flask(__name__)
 
 app.secret_key = os.environ["SECRET_KEY"]
+UPLOAD_FOLDER = os.path.join("static", "uploads")
+ALLOWED_HEADSHOT_EXT = {"png", "jpg", "jpeg"}
+ALLOWED_CV_EXT = {"pdf", "doc", "docx"}
 
+os.makedirs(os.path.join(UPLOAD_FOLDER, "headshots"), exist_ok=True)
+os.makedirs(os.path.join(UPLOAD_FOLDER, "CVS"), exist_ok=True)
+
+def allowed_file(filename, allowed_exts):
+    return "." in filename and filename.rsplit(".", 1)[1].lower() in allowed_exts
 
 #login
 @app.route("/login", methods=["GET", "POST"])
@@ -31,7 +40,6 @@ def login():
 
     return render_template("login.html")
 
-#directs person after they have logged in
 @app.route("/dashboard")
 def dashboard():
     if "user_id" not in session:
@@ -49,21 +57,19 @@ def dashboard():
     else:
         return "Invalid user role", 403
 
-#logs out, called automatically when they leave the site
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("login"))
 
-#allows creation of new accounts
 @app.route("/create-account", methods=["GET", "POST"])
 def create_account():
+    if session.get("role") != "admin":
+        return "Access denied", 403
+
     print(request.method, request.path, file=sys.stderr, flush=True)
     if request.method == "POST":
         print("Create-Account got called", file=sys.stderr, flush=True)
-
-        headshot_path = None
-        cv_path = None
 
         first_name = request.form["firstname"]
         last_name = request.form["lastname"]
@@ -71,13 +77,33 @@ def create_account():
         password = request.form["password"]
         actual_role = request.form["actual_role"]
 
+        headshot = request.files.get("headshot")
+        resume = request.files.get("resume")
+
+        headshot_path = None
+        cv_path = None
+
+        if headshot and headshot.filename and allowed_file(headshot.filename, ALLOWED_HEADSHOT_EXT):
+            filename = secure_filename(f"{email}_headshot_{headshot.filename}")
+            save_path = os.path.join(UPLOAD_FOLDER, "headshots", filename)
+            headshot.save(save_path)
+            headshot_path = f"/{UPLOAD_FOLDER}/headshots/{filename}"
+
+        if resume and resume.filename and allowed_file(resume.filename, ALLOWED_CV_EXT):
+            filename = secure_filename(f"{email}_CVS_{resume.filename}")
+            save_path = os.path.join(UPLOAD_FOLDER, "CVS", filename)
+            resume.save(save_path)
+            cv_path = f"/{UPLOAD_FOLDER}/CVS/{filename}"
+
         success = create_user(
             first_name,
             last_name,
             email,
             password,
             "intern",
-            actual_role
+            actual_role,
+            headshot_path,
+            cv_path
         )
 
         if not success:
@@ -114,9 +140,36 @@ def request_task(user_id):
         return "Access denied", 403
 
     set_needs_new_task(user_id)
-    return redirect(request.referrer)        
+    return redirect(request.referrer)
 
+@app.route("/upload-files/<int:user_id>", methods=["POST"])
+def upload_files(user_id):
+    if session.get("role") != "intern":
+        return "Access denied", 403
+    elif user_id != session["user_id"]:
+        return "Access denied", 403
 
+    headshot = request.files.get("headshot")
+    cv = request.files.get("cv")
+
+    headshot_path = None
+    cv_path = None
+
+    if headshot and headshot.filename and allowed_file(headshot.filename, ALLOWED_HEADSHOT_EXT):
+        filename = secure_filename(f"user{user_id}_headshot_{headshot.filename}")
+        save_path = os.path.join(UPLOAD_FOLDER, "headshots", filename)
+        headshot.save(save_path)
+        headshot_path = f"/{UPLOAD_FOLDER}/headshots/{filename}"
+
+    if cv and cv.filename and allowed_file(cv.filename, ALLOWED_CV_EXT):
+        filename = secure_filename(f"user{user_id}_CVS_{cv.filename}")
+        save_path = os.path.join(UPLOAD_FOLDER, "CVS", filename)
+        cv.save(save_path)
+        cv_path = f"/{UPLOAD_FOLDER}/CVS/{filename}"
+
+    update_user_path(user_id, headshot_path, cv_path)
+
+    return redirect(request.referrer)
 
 @app.route("/add-feedback/<int:user_id>", methods=["POST"])
 def add_feedback_to_intern(user_id):
@@ -154,7 +207,6 @@ def update_status(task_id):
 
     return redirect(request.referrer)
 
-#page routes
 @app.route("/")
 def home():
     return redirect(url_for("login"))
@@ -209,9 +261,8 @@ def admin_view_profile(user_id):
         "admin-view-profile.html",
         intern=intern,
         tasks=recent_tasks,
-        old_tasks=old_tasks 
+        old_tasks=old_tasks
     )
-#end of page routes
 
 if __name__ == "__main__":
     app.run(
