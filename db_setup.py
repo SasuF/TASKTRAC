@@ -206,7 +206,8 @@ def get_all_interns():
     conn = get_connection()
     cur = conn.cursor()
     cur.execute("""
-        SELECT id, first_name, last_name, email, headshot_path, cv_path, actual_role, needs_new_task
+        SELECT id, first_name, last_name, email, headshot_path, cv_path, actual_role, needs_new_task,
+               (password_hash IS NULL) AS is_pending
         FROM users
         WHERE role = 'intern' AND is_archived = FALSE
     """)
