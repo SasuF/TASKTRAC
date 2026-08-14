@@ -426,7 +426,11 @@ button:hover, .button:hover {
 
 <div class="add-task">
 
-    <h3>EDIT PROFILE</h3>
+    <h3 style="cursor:pointer;" onclick="toggleEditProfile()">
+        EDIT PROFILE ▾
+    </h3>
+
+    <div id="editProfileForm" style="display:none;">
 
     <form method="POST"
           action="{{ url_for('edit_profile', user_id=intern[0]) }}">
@@ -459,6 +463,8 @@ button:hover, .button:hover {
         <button type="submit">SAVE CHANGES</button>
 
     </form>
+
+    </div>
 
 </div>
 
@@ -701,6 +707,10 @@ function openTaskModal(status, title, placeholder, buttonText) {
     taskInput.focus();
 }
 
+function toggleEditProfile() {
+    const form = document.getElementById("editProfileForm");
+    form.style.display = (form.style.display === "none") ? "block" : "none";
+}
 
 function closeTaskModal() {
 
