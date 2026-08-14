@@ -1,3 +1,6 @@
+Here's the complete file with the headshot fix applied — safe to replace the whole thing:
+
+html
 <!DOCTYPE html>
 <html>
 <head>
@@ -228,7 +231,11 @@ button, .button {
         <div class="intern-header">
 
             <div class="avatar">
-                {{ intern[1][0] }}
+                {% if intern[4] %}
+                    <img src="/{{ intern[4] }}" alt="Headshot" style="width:100%; height:100%; object-fit:cover; border-radius:8px;">
+                {% else %}
+                    {{ intern[1][0] }}
+                {% endif %}
             </div>
 
             <div class="intern-info">
