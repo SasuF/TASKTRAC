@@ -424,6 +424,44 @@ button:hover, .button:hover {
 
 </div>
 
+<div class="add-task">
+
+    <h3>EDIT PROFILE</h3>
+
+    <form method="POST"
+          action="{{ url_for('edit_profile', user_id=intern[0]) }}">
+
+        <label>First Name:</label>
+        <input type="text" name="firstname" value="{{ intern[1] }}" required>
+
+        <br><br>
+
+        <label>Last Name:</label>
+        <input type="text" name="lastname" value="{{ intern[2] }}" required>
+
+        <br><br>
+
+        <label>Email:</label>
+        <input type="email" name="email" value="{{ intern[3] }}" required>
+
+        <br><br>
+
+        <label>Role:</label>
+        <select name="actual_role" required>
+            <option value="Tech" {% if intern[6] == "Tech" %}selected{% endif %}>Tech</option>
+            <option value="Operations" {% if intern[6] == "Operations" %}selected{% endif %}>Operations</option>
+            <option value="Finance" {% if intern[6] == "Finance" %}selected{% endif %}>Finance</option>
+            <option value="Marketing" {% if intern[6] == "Marketing" %}selected{% endif %}>Marketing</option>
+        </select>
+
+        <br><br>
+
+        <button type="submit">SAVE CHANGES</button>
+
+    </form>
+
+</div>
+
 <!-- Current -->
 <h3 class="task-title">
     What is your current task/what is the status:

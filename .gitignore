@@ -1,2 +1,4 @@
 tasktrac
 __pycache__/
+tasktrac.env
+static/uploads/

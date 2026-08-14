@@ -3,7 +3,7 @@ from werkzeug.utils import secure_filename
 import secrets
 from db_setup import (create_user, get_all_interns, get_intern_profile, remove_task, log_in,
 get_all_interns, get_intern_profile, add_feedback, add_task, update_task_status,
-set_needs_new_task, get_interns_needing_tasks, update_user_path)
+set_needs_new_task, get_interns_needing_tasks, update_user_path,update_intern_info)
 import sys
 import os
 
@@ -140,6 +140,25 @@ def request_task(user_id):
         return "Access denied", 403
 
     set_needs_new_task(user_id)
+    return redirect(request.referrer)
+
+@app.route("/edit-profile/<int:user_id>", methods=["POST"])
+def edit_profile(user_id):
+    if session.get("role") != "intern":
+        return "Access denied", 403
+    elif user_id != session["user_id"]:
+        return "Access denied", 403
+
+    first_name = request.form["firstname"]
+    last_name = request.form["lastname"]
+    email = request.form["email"]
+    actual_role = request.form["actual_role"]
+
+    success = update_intern_info(user_id, first_name, last_name, email, actual_role)
+
+    if not success:
+        return "Profile update failed. Email may already be in use.", 500
+
     return redirect(request.referrer)
 
 @app.route("/upload-files/<int:user_id>", methods=["POST"])

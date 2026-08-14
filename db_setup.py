@@ -258,6 +258,30 @@ def get_intern_profile(user_id):
 
     return intern, recent_tasks, old_tasks
 
+def update_intern_info(user_id, first_name, last_name, email, actual_role):
+    conn = None
+    try:
+        conn = get_connection()
+        cur = conn.cursor()
+        cur.execute("""
+            UPDATE users
+            SET first_name = %s,
+                last_name = %s,
+                email = %s,
+                actual_role = %s
+            WHERE id = %s AND role = 'intern'
+        """, (first_name, last_name, email, actual_role, user_id))
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print("DATABASE ERROR:", repr(e))
+        if conn:
+            conn.close()
+        return False
+
 def update_user_path(user_id, headshot_path=None, cv_path=None):
     conn = get_connection()
     cur = conn.cursor()
